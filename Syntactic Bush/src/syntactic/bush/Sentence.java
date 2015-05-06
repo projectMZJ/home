@@ -62,6 +62,15 @@ public class Sentence {
     public void setSentence(String[] sentence) {
         this.sentence = sentence;
     }
+    
+    public String toString(){
+        String result = "";
+        for (int i=0; i < sentence.length; i++){
+            result += sentence[i];
+            result += " ";
+        }
+        return result;
+    }
    
     
 }
