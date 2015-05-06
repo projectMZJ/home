@@ -6,6 +6,7 @@
 package syntactic.bush;
 
 import java.io.File;
+import java.util.Arrays;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -96,8 +97,12 @@ public class Sentence {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(file);
+            
+            //pomocne pole pro zapamatovani hodnot ff.syntax.x
+            int[] array = new int[this.idSentence.length];
+            Arrays.fill(array, 0);
             NodeList syntaxes = doc.getElementsByTagName("syntax");
-            for (int i=0; i < 15/*syntaxes.getLength()*/; i++){
+            for (int i=0; i < syntaxes.getLength(); i++){
                 Element syntax = (Element)syntaxes.item(i);
                 
                 //zabyvat se jenom temi co maji status 1
@@ -147,9 +152,17 @@ public class Sentence {
                             if(idSentence[j] == to) indexTo = j;
                             if(idSentence[j] == from) indexFrom = j;
                     }
+                    
+                    //ulozeni id z ff.syntax.x
+                    array[indexFrom] = indicator;
+                    
                     System.out.println(sentence[indexFrom]); 
                 }
             }
+            
+            //zkopirovat pomocneho pole do idSentence, od ted je v idSentence pripraveno na relation
+            System.arraycopy(array, 0, idSentence, 0, array.length);
+            //System.out.println(Arrays.toString(idSentence));
         } catch (Exception e) {
             e.printStackTrace();
         }
