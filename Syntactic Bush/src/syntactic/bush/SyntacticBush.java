@@ -48,7 +48,7 @@ public class SyntacticBush {
             Sentence s = new Sentence(tail,head, idSentence, phrases.toArray(new String[phrases.size()]));
             System.out.println(s);
             s.readSyntax();
-            
+            s.readRelation();
         } catch (Exception e) {
             e.printStackTrace();
         }
