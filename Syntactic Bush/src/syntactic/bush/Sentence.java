@@ -157,6 +157,11 @@ public class Sentence {
                     
                     //System.out.println(sentence[indexFrom]); 
                 }
+                
+                        
+            }
+            for (String sentence1 : sentence){
+                System.out.println("[" + sentence1 + "]");
             }
             
             //zkopirovat pomocneho pole do idSentence, od ted je v idSentence pripraveno na relation
@@ -227,6 +232,8 @@ public class Sentence {
             //3 v sentence, tj. sentence[3]
             System.arraycopy(array, 0, idSentence, 0, array.length);
             System.out.println(Arrays.toString(idSentence));
+            
+            
 
         } catch (Exception e) {
             e.printStackTrace();
