@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -6,7 +7,11 @@
 package syntactic.bush;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -14,6 +19,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.w3c.dom.DOMImplementation;
 
 /**
  *
@@ -31,6 +44,10 @@ public class Sentence {
         this.head = head;
         this.sentence = sentence;
         this.idSentence = idSentence;
+    }
+    
+    public int[] getIdSentence(){
+        return this.idSentence;
     }
 
     /**
@@ -157,11 +174,6 @@ public class Sentence {
                     
                     //System.out.println(sentence[indexFrom]); 
                 }
-                
-                        
-            }
-            for (String sentence1 : sentence){
-                System.out.println("[" + sentence1 + "]");
             }
             
             //zkopirovat pomocneho pole do idSentence, od ted je v idSentence pripraveno na relation
@@ -175,6 +187,7 @@ public class Sentence {
     public static int lastIndex(String str){
         return Integer.parseInt(str.split("\\.")[2]);
     }
+    
     
     public void readRelation(){
         try {
@@ -232,8 +245,6 @@ public class Sentence {
             //3 v sentence, tj. sentence[3]
             System.arraycopy(array, 0, idSentence, 0, array.length);
             System.out.println(Arrays.toString(idSentence));
-            
-            
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -257,4 +268,72 @@ public class Sentence {
         }
         return array;
     }
+    
+    public void createDocument() throws FileNotFoundException, IOException {
+        DOMImplementation domi = SVGDOMImplementation.getDOMImplementation();
+        String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
+        Document doc = domi.createDocument(svgNS, "svg", null);
+        Element svgRoot = doc.getDocumentElement();
+        svgRoot.setAttributeNS(null, "width", "400");
+        svgRoot.setAttributeNS(null, "heigth", "400");
+        Element defs = doc.createElementNS(svgNS, "defs");
+        Element marker = doc.createElementNS(svgNS,"marker");
+        marker.setAttributeNS(null, "id", "markerArrow");
+        int y = 20;
+        int x = 20;
+        /*for (String sentence : s.getSentence()) {
+            if (sentence != null) {
+                Element text = doc.createElementNS(svgNS, "text");
+                text.setAttributeNS(null, "y",Integer.toString(y));
+                text.setAttributeNS(null, "fill", "red");
+                text.setTextContent("[" + sentence + "]");
+                svgRoot.appendChild(text);
+                y += 20;
+            }
+        }*/
+        System.out.println(idSentence.length);
+        System.out.println(Arrays.toString(idSentence));
+        for (int i=0; i < idSentence.length; i++){
+            if (idSentence[i] != -1){
+                
+                Element textFrom = doc.createElementNS(svgNS, "text");
+                textFrom.setAttributeNS(null,"y",Integer.toString(y));
+                textFrom.setAttributeNS(null,"x",Integer.toString(x));
+                textFrom.setAttributeNS(null, "fill", "red");
+                String from = "[" + sentence[i] + "]";
+                String to = "[" + sentence[idSentence[i]] + "]";
+                textFrom.setTextContent(from);
+                x += 200;
+                Element textTo = doc.createElementNS(svgNS,"text");
+                textTo.setAttributeNS(null,"y",Integer.toString(y));
+                textTo.setAttributeNS(null,"x",Integer.toString(x));
+                textTo.setTextContent(to);
+                int fromXCor = Integer.parseInt(textFrom.getAttribute("x"));
+                int fromYCor = Integer.parseInt(textFrom.getAttribute("y"));
+                int toXCor = Integer.parseInt(textTo.getAttribute("x"));
+                int toYCor = Integer.parseInt(textTo.getAttribute("y"));
+                //Element line = doc.createElementNS(svgNS, "path");
+                //line.setAttributeNS(null, "d", "M " + fromXCor + " " + fromYCor + " l " + toXCor + " " + toYCor );
+                svgRoot.appendChild(textFrom);
+                //svgRoot.appendChild(line);
+                svgRoot.appendChild(textTo);
+                y += 20;
+                x = 20;
+                
+            }
+        }
+        try {
+            TransformerFactory factory = TransformerFactory.newInstance();
+            Transformer t = factory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File("out.xml"));
+            t.transform(source, result);
+        } catch (TransformerConfigurationException tce) {
+            tce.printStackTrace();
+        } catch (TransformerException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+    
 }
