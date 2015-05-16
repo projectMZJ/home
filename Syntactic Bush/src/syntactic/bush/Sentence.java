@@ -8,6 +8,7 @@ package syntactic.bush;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -26,6 +27,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.JPEGTranscoder;
+import org.omg.CORBA.portable.OutputStream;
 import org.w3c.dom.DOMImplementation;
 
 /**
@@ -33,20 +39,20 @@ import org.w3c.dom.DOMImplementation;
  * @author omacejovsky
  */
 public class Sentence {
+
     private Integer tail; //index konce vety 
     private Integer head; // index zacatku vety
     private String[] sentence; //veta ulozena v poli po slovech
     private final int[] idSentence; //k sentence, pole kazdemu slovu v poli sentence prideluje jeho cislo v ff.text.xml
-    
-    public Sentence(Integer tail, Integer head, int[] idSentence, String[] sentence)
-    {
+
+    public Sentence(Integer tail, Integer head, int[] idSentence, String[] sentence) {
         this.tail = tail;
         this.head = head;
         this.sentence = sentence;
         this.idSentence = idSentence;
     }
-    
-    public int[] getIdSentence(){
+
+    public int[] getIdSentence() {
         return this.idSentence;
     }
 
@@ -91,91 +97,97 @@ public class Sentence {
     public void setSentence(String[] sentence) {
         this.sentence = sentence;
     }
-    
+
     /**
      * toString return array in one string
+     *
      * @return one strinf full of parts of array
      */
-    public String toString(){
+    public String toString() {
         String result = "";
-        for (int i=0; i < sentence.length; i++){
+        for (int i = 0; i < sentence.length; i++) {
             result += sentence[i];
             result += " ";
         }
         return result;
     }
-    
+
     /**
      * readSyntax() read syntax
      */
-    public void readSyntax(){
+    public void readSyntax() {
         try {
             File file = new File("." + File.separator + "src" + File.separator + "ff.syntax.xml");
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(file);
-            
+
             //pomocne pole pro zapamatovani hodnot ff.syntax.x
             int[] array = new int[this.idSentence.length];
             Arrays.fill(array, -1);
             NodeList syntaxes = doc.getElementsByTagName("syntax");
-            for (int i=0; i < syntaxes.getLength(); i++){
-                Element syntax = (Element)syntaxes.item(i);
-                
+            for (int i = 0; i < syntaxes.getLength(); i++) {
+                Element syntax = (Element) syntaxes.item(i);
+
                 //zabyvat se jenom temi co maji status 1
-                if (syntax.hasAttribute("status") && Integer.parseInt(syntax.getAttribute("status")) == 1){
+                if (syntax.hasAttribute("status") && Integer.parseInt(syntax.getAttribute("status")) == 1) {
                     Integer indicator = lastIndex(syntax.getAttribute("nite:id")); //hodnosta ff.syntax.x
-                    Element child = (Element)syntax.getElementsByTagName("nite:child").item(0);
+                    Element child = (Element) syntax.getElementsByTagName("nite:child").item(0);
                     String href = child.getAttribute("href");
-                    
+
                     //parser href
-                    
                     int[] pom = parser(href);
                     int from = pom[0];
                     int to = pom[1];
-                    
+
                     //for skonci kdyz je from vetsi nez tail, tzn. uz jsme u dalsi vety
                     //if(from > this.tail) break;
-                    
                     //slouceni skupin do poli k sobe
                     int indexTo = 0;
                     int indexFrom = 0;
                     int ok = 0;
-                    if(from != to+1){
+                    if (from != to + 1) {
                         int j;
-                        
+
                         //nalezeni, kde indexu kde zacina a konci cast skupiny v sentece
-                        for(j = 0; j < tail-head; j++){
-                            if(idSentence[j] == to){
+                        for (j = 0; j < tail - head; j++) {
+                            if (idSentence[j] == to) {
                                 indexTo = j;
                                 ok++;
                             }
-                            if(idSentence[j] == from) indexFrom = j;
+                            if (idSentence[j] == from) {
+                                indexFrom = j;
+                            }
                         }
-                        
+
                         //ulozeni vsech podcasti do jedne
-                        while(indexFrom != indexTo){
-                            sentence[indexTo-1] = sentence[indexTo-1] + " " + sentence[indexTo];
+                        while (indexFrom != indexTo) {
+                            sentence[indexTo - 1] = sentence[indexTo - 1] + " " + sentence[indexTo];
                             sentence[indexTo] = null;
                             indexTo--;
-                        }           
+                        }
                     }
-                    
-                    
+
                     //kvuli vypisu
                     int j;
-                    for(j = 0; j < tail-head; j++){
-                            if(idSentence[j] == to) indexTo = j;
-                            if(idSentence[j] == from) indexFrom = j;
+                    for (j = 0; j < tail - head; j++) {
+                        if (idSentence[j] == to) {
+                            indexTo = j;
+                        }
+                        if (idSentence[j] == from) {
+                            indexFrom = j;
+                        }
                     }
-                    
+
                     //ulozeni id z ff.syntax.x
-                    if(ok > 0) array[indexFrom] = indicator;
-                    
+                    if (ok > 0) {
+                        array[indexFrom] = indicator;
+                    }
+
                     //System.out.println(sentence[indexFrom]); 
                 }
             }
-            
+
             //zkopirovat pomocneho pole do idSentence, od ted je v idSentence pripraveno na relation
             System.arraycopy(array, 0, idSentence, 0, array.length);
             System.out.println(Arrays.toString(idSentence));
@@ -183,61 +195,62 @@ public class Sentence {
             e.printStackTrace();
         }
     }
-   
-    public static int lastIndex(String str){
+
+    public static int lastIndex(String str) {
         return Integer.parseInt(str.split("\\.")[2]);
     }
-    
-    
-    public void readRelation(){
+
+    public void readRelation() {
         try {
             File file = new File("." + File.separator + "src" + File.separator + "ff.syntax-relation.xml");
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(file);
-            
+
             //pomocne pole pro zapamatovani hodnot ff.syntax-relation.x
             int[] array = new int[this.idSentence.length];
             Arrays.fill(array, -1);
             NodeList srelations = doc.getElementsByTagName("srelation");
-            for (int i=0; i < srelations.getLength(); i++){
-                Element relation = (Element)srelations.item(i);
-                
+            for (int i = 0; i < srelations.getLength(); i++) {
+                Element relation = (Element) srelations.item(i);
+
                 Element pointer = (Element) relation.getElementsByTagName("nite:pointer").item(0);
                 String href = pointer.getAttribute("href");
-                
+
                 //parser href
                 int[] pom = parser(href);
                 int pointerID = pom[0]; //ff.syntax of pointer
-                  
-                Element child = (Element)relation.getElementsByTagName("nite:child").item(0);
+
+                Element child = (Element) relation.getElementsByTagName("nite:child").item(0);
                 String href1 = child.getAttribute("href");
-                    
+
                 //parser href
                 pom = parser(href1);
                 int childID = pom[0]; //ff.syntax of child
-                
+
                 //to ukazuje na from
                 int indexTo = 0;
                 int indexFrom = 0;
                 int ok = 0;
-              
+
                 //hledani ukazatele a kam ukazuje v poli
                 int j;
-                for(j = 0; j < idSentence.length; j++){
-                    if(idSentence[j] == pointerID){
+                for (j = 0; j < idSentence.length; j++) {
+                    if (idSentence[j] == pointerID) {
                         ok++;
                         indexTo = j;
                     }
-                    if(idSentence[j] == childID){
+                    if (idSentence[j] == childID) {
                         indexFrom = j;
                         ok++;
                     }
                 }
-                
-                if (ok > 0) array[indexFrom] = indexTo;
+
+                if (ok > 0) {
+                    array[indexFrom] = indexTo;
+                }
             }
-            
+
             //pole idSentence obsahuje -1 pokud slovo na teto pozici v sentence nikam neukazuje
             //a hodnotu 0-(delka vety), pokud slovo někam ukazuje
             //tzn. v poli idSentence je uloženo na pozici 0, hodnota 3 znamena ze slovo nebo
@@ -253,22 +266,26 @@ public class Sentence {
 
     /**
      * Funkce na parsovani href
+     *
      * @param href atribut nite
      * @return pole, array[0] první indikator, pole [1] druhy indikator
      */
-    public int[] parser (String href) {
+    public int[] parser(String href) {
         Pattern pattern = Pattern.compile("[0-9]+");
         Matcher matcher;
         matcher = pattern.matcher(href);
         int[] array = new int[2];
         if (matcher.find()) {
             array[0] = Integer.parseInt(matcher.group(0));
-            if(matcher.find()) array[1] = Integer.parseInt(matcher.group(0));
-            else array[1] = array[0];
+            if (matcher.find()) {
+                array[1] = Integer.parseInt(matcher.group(0));
+            } else {
+                array[1] = array[0];
+            }
         }
         return array;
     }
-    
+
     public void createDocument() throws FileNotFoundException, IOException {
         DOMImplementation domi = SVGDOMImplementation.getDOMImplementation();
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
@@ -276,52 +293,42 @@ public class Sentence {
         Element svgRoot = doc.getDocumentElement();
         svgRoot.setAttributeNS(null, "width", "400");
         svgRoot.setAttributeNS(null, "heigth", "400");
-        Element defs = doc.createElementNS(svgNS, "defs");
-        Element marker = doc.createElementNS(svgNS,"marker");
-        marker.setAttributeNS(null, "id", "markerArrow");
+        svgRoot.appendChild(createDefs(doc, svgNS));
         int y = 20;
         int x = 20;
-        /*for (String sentence : s.getSentence()) {
-            if (sentence != null) {
-                Element text = doc.createElementNS(svgNS, "text");
-                text.setAttributeNS(null, "y",Integer.toString(y));
-                text.setAttributeNS(null, "fill", "red");
-                text.setTextContent("[" + sentence + "]");
-                svgRoot.appendChild(text);
-                y += 20;
-            }
-        }*/
         System.out.println(idSentence.length);
         System.out.println(Arrays.toString(idSentence));
-        for (int i=0; i < idSentence.length; i++){
-            if (idSentence[i] != -1){
-                
+        for (int i = 0; i < idSentence.length; i++) {
+            if (idSentence[i] != -1) {
                 Element textFrom = doc.createElementNS(svgNS, "text");
-                textFrom.setAttributeNS(null,"y",Integer.toString(y));
-                textFrom.setAttributeNS(null,"x",Integer.toString(x));
+                textFrom.setAttributeNS(null, "y", Integer.toString(y));
+                textFrom.setAttributeNS(null, "x", Integer.toString(x));
                 textFrom.setAttributeNS(null, "fill", "red");
                 String from = "[" + sentence[i] + "]";
                 String to = "[" + sentence[idSentence[i]] + "]";
+                int fromXCor = x + from.length() + 100;
+                int fromYCor = y - 5;
                 textFrom.setTextContent(from);
                 x += 200;
-                Element textTo = doc.createElementNS(svgNS,"text");
-                textTo.setAttributeNS(null,"y",Integer.toString(y));
-                textTo.setAttributeNS(null,"x",Integer.toString(x));
+                Element textTo = doc.createElementNS(svgNS, "text");
+                textTo.setAttributeNS(null, "y", Integer.toString(y));
+                textTo.setAttributeNS(null, "x", Integer.toString(x));
                 textTo.setTextContent(to);
-                int fromXCor = Integer.parseInt(textFrom.getAttribute("x"));
-                int fromYCor = Integer.parseInt(textFrom.getAttribute("y"));
-                int toXCor = Integer.parseInt(textTo.getAttribute("x"));
-                int toYCor = Integer.parseInt(textTo.getAttribute("y"));
-                //Element line = doc.createElementNS(svgNS, "path");
-                //line.setAttributeNS(null, "d", "M " + fromXCor + " " + fromYCor + " l " + toXCor + " " + toYCor );
+                int toXCor = x + from.length() - 50;
+                int toYCor = y - 5;
+                Element path = doc.createElementNS(svgNS,"path");
+                path.setAttributeNS(null, "d", "M " + fromXCor + " " + fromYCor + "L " + toXCor + " " + toYCor);
+                path.setAttributeNS(null, "stroke", "black");
+                path.setAttributeNS(null,"style","marker-end: url(#Triangle)");
                 svgRoot.appendChild(textFrom);
-                //svgRoot.appendChild(line);
+                svgRoot.appendChild(path);
                 svgRoot.appendChild(textTo);
                 y += 20;
                 x = 20;
-                
+
             }
         }
+        //Vytvori out.xml zo sentence + pokus o path, dorobim to neskôr
         try {
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer t = factory.newTransformer();
@@ -333,7 +340,35 @@ public class Sentence {
         } catch (TransformerException ex) {
             ex.printStackTrace();
         }
+        //Vytvori out.jpg. Neviem čo bude lepšie pre tu webku,
+        //či tam dať jpgčo, alebo xmlko
+        JPEGTranscoder t = new JPEGTranscoder();
+        TranscoderInput input = new TranscoderInput(doc);
+        try (FileOutputStream ostream = new FileOutputStream("out.jpg")) {
+            TranscoderOutput output = new TranscoderOutput(ostream);
+            // Save the image.
+            t.transcode(input, output);
+        } catch (TranscoderException ex) {
+            Logger.getLogger(Sentence.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
     
+    private Element createDefs(Document doc, String svgNS){
+        Element defs = doc.createElementNS(svgNS, "defs");
+        Element marker = doc.createElementNS(svgNS, "marker");
+        marker.setAttributeNS(null, "id", "Triangle");
+        marker.setAttributeNS(null, "viewBox", "0 0 10 10");
+        marker.setAttributeNS(null, "refX", "1");
+        marker.setAttributeNS(null, "refY", "5");
+        marker.setAttributeNS(null, "markerWidth", "6");
+        marker.setAttributeNS(null, "markerHeight", "6");
+        marker.setAttributeNS(null, "orient", "auto");
+        Element path = doc.createElementNS(svgNS, "path");
+        path.setAttributeNS(null, "d", "M 0 0 L 10 5 L 0 10 z");
+        marker.appendChild(path);
+        defs.appendChild(marker);
+        return defs;
+    }
+
 }
