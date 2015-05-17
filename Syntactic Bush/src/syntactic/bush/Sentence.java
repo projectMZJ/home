@@ -323,10 +323,15 @@ public class Sentence {
                 Element path = doc.createElementNS(svgNS, "path");
                 float aCx = fromXCor + 21.3561706542969f;
                 String curvedPath = "M " + fromXCor + " " + fromYCor + "A " + aCx + " " + aCx + " 0 0 1 " + toXCor + " " + toYCor;
-                //path.setAttributeNS(null, "d", "M " + fromXCor + " " + fromYCor + "L " + toXCor + " " + toYCor);
                 path.setAttributeNS(null, "d", curvedPath);
-                path.setAttributeNS(null, "stroke", "black");
-                path.setAttributeNS(null, "style", "fill: none; stroke-width: 1px; vector-effect: non-scaling-stroke; marker-start: url(#Circle); marker-end: url(#Triangle)");
+                /*
+                Nastavi farbu podla pravdeposobnosti na odtien narp. ciernej,
+                Musime ale pouzit kod svg, ktory potom dame do stranky, lebo inak
+                sa to korektne nezobrazi (napr. v chrome je len cast medzi kruzkom a vrchom sipky
+                v tomto odtieni, napr. IE alebo Mozzila rovno vyplnia aj kruzok aj vrch sipky na tuto farbu
+                */
+                path.setAttributeNS(null, "stroke", ColorConverter.cmykToHex(0f, 0f, 0f, 0.1f));                                                        
+                path.setAttributeNS(null, "style", "fill: #e6e6e6; stroke-width: 1px; vector-effect: non-scaling-stroke; marker-start: url(#Circle); marker-end: url(#Triangle); stroke: #e6e6e6");
                 svgRoot.appendChild(textFrom);
                 svgRoot.appendChild(path);
                 svgRoot.appendChild(textTo);
@@ -404,7 +409,7 @@ public class Sentence {
         circle.setAttributeNS(null, "cx", "0");
         circle.setAttributeNS(null, "cy", "0");
         circle.setAttributeNS(null, "r", "5");
-        circle.setAttributeNS(null, "fill", "black");
+        //circle.setAttributeNS(null, "fill", "black");
         markerCircle.appendChild(circle);
         defs.appendChild(markerTriangle);
         defs.appendChild(markerCircle);
