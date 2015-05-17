@@ -7,9 +7,11 @@
 package syntactic.bush;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,11 +28,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.JPEGTranscoder;
+import org.apache.batik.util.XMLResourceDescriptor;
 import org.omg.CORBA.portable.OutputStream;
 import org.w3c.dom.DOMImplementation;
 
@@ -291,9 +295,9 @@ public class Sentence {
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
         Document doc = domi.createDocument(svgNS, "svg", null);
         Element svgRoot = doc.getDocumentElement();
-        svgRoot.setAttributeNS(null, "width", "400");
-        svgRoot.setAttributeNS(null, "heigth", "400");
-        svgRoot.appendChild(createDefs(doc, svgNS));
+        svgRoot.setAttributeNS(null, "width", "100%");
+        svgRoot.setAttributeNS(null, "heigth", "100%");
+        svgRoot.appendChild(createDefs(doc,svgNS));
         int y = 20;
         int x = 20;
         System.out.println(idSentence.length);
@@ -317,9 +321,12 @@ public class Sentence {
                 int toXCor = x + from.length() - 50;
                 int toYCor = y - 5;
                 Element path = doc.createElementNS(svgNS,"path");
-                path.setAttributeNS(null, "d", "M " + fromXCor + " " + fromYCor + "L " + toXCor + " " + toYCor);
+                float aCx = fromXCor + 21.3561706542969f;
+                String curvedPath = "M " + fromXCor + " " + fromYCor + "A " + aCx + " " + aCx + " 0 0 1 " + toXCor + " " + toYCor;
+                //path.setAttributeNS(null, "d", "M " + fromXCor + " " + fromYCor + "L " + toXCor + " " + toYCor);
+                path.setAttributeNS(null, "d", curvedPath);
                 path.setAttributeNS(null, "stroke", "black");
-                path.setAttributeNS(null,"style","marker-end: url(#Triangle)");
+                path.setAttributeNS(null,"style","fill: none; stroke-width: 1px; vector-effect: non-scaling-stroke; marker-start: url(#Circle); marker-end: url(#Triangle)");
                 svgRoot.appendChild(textFrom);
                 svgRoot.appendChild(path);
                 svgRoot.appendChild(textTo);
@@ -354,21 +361,44 @@ public class Sentence {
 
     }
     
+    /**
+     * Vytvori tvar konca sipky
+     * @param doc
+     * @param svgNS
+     * @return 
+     */
     private Element createDefs(Document doc, String svgNS){
         Element defs = doc.createElementNS(svgNS, "defs");
-        Element marker = doc.createElementNS(svgNS, "marker");
-        marker.setAttributeNS(null, "id", "Triangle");
-        marker.setAttributeNS(null, "viewBox", "0 0 10 10");
-        marker.setAttributeNS(null, "refX", "1");
-        marker.setAttributeNS(null, "refY", "5");
-        marker.setAttributeNS(null, "markerWidth", "6");
-        marker.setAttributeNS(null, "markerHeight", "6");
-        marker.setAttributeNS(null, "orient", "auto");
+        Element markerTriangle = doc.createElementNS(svgNS, "marker");
+        markerTriangle.setAttributeNS(null, "id", "Triangle");
+        markerTriangle.setAttributeNS(null, "viewBox", "-15 -5 20 20");
+        markerTriangle.setAttributeNS(null, "refX", "-3");
+        markerTriangle.setAttributeNS(null, "refY", "0");
+        markerTriangle.setAttributeNS(null, "markerWidth", "16");
+        markerTriangle.setAttributeNS(null, "markerHeight", "20");
+        markerTriangle.setAttributeNS(null, "orient", "auto");
         Element path = doc.createElementNS(svgNS, "path");
-        path.setAttributeNS(null, "d", "M 0 0 L 10 5 L 0 10 z");
-        marker.appendChild(path);
-        defs.appendChild(marker);
+        path.setAttributeNS(null, "d", "M -15 -5 L 0 0 L -15 5 z");
+        markerTriangle.appendChild(path);
+        Element markerCircle = doc.createElementNS(svgNS, "marker");
+        markerCircle.setAttributeNS(null, "id", "Circle");
+        markerCircle.setAttributeNS(null, "viewBox", "-5 -5 10 10");
+        markerCircle.setAttributeNS(null, "refX", "0");
+        markerCircle.setAttributeNS(null, "refY", "0");
+        markerCircle.setAttributeNS(null, "markerWidth", "6");
+        markerCircle.setAttributeNS(null, "markerHeight", "6");
+        markerCircle.setAttributeNS(null, "orient", "auto");
+        Element circle = doc.createElementNS(svgNS, "circle");
+        circle.setAttributeNS(null, "cx", "0");
+        circle.setAttributeNS(null, "cy", "0");
+        circle.setAttributeNS(null, "r", "5");
+        circle.setAttributeNS(null, "fill", "black");
+        markerCircle.appendChild(circle);
+        defs.appendChild(markerTriangle);
+        defs.appendChild(markerCircle);
         return defs;
+        
     }
+    
 
 }
