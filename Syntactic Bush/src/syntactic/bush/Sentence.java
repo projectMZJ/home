@@ -297,7 +297,7 @@ public class Sentence {
         Element svgRoot = doc.getDocumentElement();
         svgRoot.setAttributeNS(null, "width", "100%");
         svgRoot.setAttributeNS(null, "heigth", "100%");
-        svgRoot.appendChild(createDefs(doc,svgNS));
+        svgRoot.appendChild(createDefs(doc, svgNS));
         int y = 20;
         int x = 20;
         System.out.println(idSentence.length);
@@ -320,18 +320,29 @@ public class Sentence {
                 textTo.setTextContent(to);
                 int toXCor = x + from.length() - 50;
                 int toYCor = y - 5;
-                Element path = doc.createElementNS(svgNS,"path");
+                Element path = doc.createElementNS(svgNS, "path");
                 float aCx = fromXCor + 21.3561706542969f;
                 String curvedPath = "M " + fromXCor + " " + fromYCor + "A " + aCx + " " + aCx + " 0 0 1 " + toXCor + " " + toYCor;
                 //path.setAttributeNS(null, "d", "M " + fromXCor + " " + fromYCor + "L " + toXCor + " " + toYCor);
                 path.setAttributeNS(null, "d", curvedPath);
                 path.setAttributeNS(null, "stroke", "black");
-                path.setAttributeNS(null,"style","fill: none; stroke-width: 1px; vector-effect: non-scaling-stroke; marker-start: url(#Circle); marker-end: url(#Triangle)");
+                path.setAttributeNS(null, "style", "fill: none; stroke-width: 1px; vector-effect: non-scaling-stroke; marker-start: url(#Circle); marker-end: url(#Triangle)");
                 svgRoot.appendChild(textFrom);
                 svgRoot.appendChild(path);
                 svgRoot.appendChild(textTo);
                 y += 20;
                 x = 20;
+            } else if ((idSentence[i] == - 1) && ((sentence[i] != null))) {
+                if (!sentence[i].equals(".")) {
+                    Element text = doc.createElementNS(svgNS, "text");
+                    text.setAttributeNS(null, "y", Integer.toString(y));
+                    text.setAttributeNS(null, "x", Integer.toString(x));
+                    text.setAttributeNS(null, "fill", "red");
+                    String from = "[" + sentence[i] + "]";
+                    text.setTextContent(from);
+                    svgRoot.appendChild(text);
+                    y += 15;
+                }
 
             }
         }
@@ -360,14 +371,15 @@ public class Sentence {
         }
 
     }
-    
+
     /**
      * Vytvori tvar konca sipky
+     *
      * @param doc
      * @param svgNS
-     * @return 
+     * @return
      */
-    private Element createDefs(Document doc, String svgNS){
+    private Element createDefs(Document doc, String svgNS) {
         Element defs = doc.createElementNS(svgNS, "defs");
         Element markerTriangle = doc.createElementNS(svgNS, "marker");
         markerTriangle.setAttributeNS(null, "id", "Triangle");
@@ -397,8 +409,7 @@ public class Sentence {
         defs.appendChild(markerTriangle);
         defs.appendChild(markerCircle);
         return defs;
-        
+
     }
-    
 
 }
