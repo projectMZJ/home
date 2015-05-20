@@ -7,11 +7,9 @@
 package syntactic.bush;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,21 +20,17 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.batik.bridge.Viewport;
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
-import org.apache.batik.transcoder.TranscoderException;
-import org.apache.batik.transcoder.TranscoderInput;
-import org.apache.batik.transcoder.TranscoderOutput;
-import org.apache.batik.transcoder.image.JPEGTranscoder;
-import org.apache.batik.util.XMLResourceDescriptor;
-import org.omg.CORBA.portable.OutputStream;
 import org.w3c.dom.DOMImplementation;
 
 /**
@@ -290,7 +284,7 @@ public class Sentence {
         svgRoot.setAttributeNS(null, "width", "100%");
         svgRoot.setAttributeNS(null, "heigth", "100%");
         svgRoot.appendChild(createDefs(doc, svgNS));
-        int y = 60;
+        int y = 100;
         int x = 10;
         int counter = 0;
         for (String str : sentence) {
@@ -299,8 +293,9 @@ public class Sentence {
                 phrase.setAttributeNS(null, "id", Integer.toString(counter));
                 phrase.setAttributeNS(null, "y", Integer.toString(y));
                 phrase.setAttributeNS(null, "x", Integer.toString(x));
+                phrase.setAttributeNS(null, "style","font-size: 16px;"); //Nebudeme nič rátať, dáme to tam natvrdo a máme hotovson
                 str = "[" + str + "]";
-                x += 110;
+                x += str.length() * 7; //Neviem prečo, ale je to takto pekne, aj s 8čkou to ide dobre
                 phrase.setTextContent(str);
                 svgRoot.appendChild(phrase);
             }
@@ -316,14 +311,14 @@ public class Sentence {
                 int toYcor = Integer.parseInt(to.getAttribute("y"));
                 float aCx = fromXcor + 21.3561706542969f;
                 String curvedPath = "M " + fromXcor + " " + fromYcor + "A " + aCx + " " + aCx + " 0 0 1 " + toXcor + " " + toYcor;
-                Element path = doc.createElementNS(svgNS,"path");
+                Element path = doc.createElementNS(svgNS, "path");
                 path.setAttributeNS(null, "d", curvedPath);
-                path.setAttributeNS(null, "stroke", ColorConverter.cmykToHex(0f, 0f, 0f, 1f));                                                        
+                path.setAttributeNS(null, "stroke", ColorConverter.cmykToHex(0f, 0f, 0f, 1f));
                 path.setAttributeNS(null, "style", "fill: none; stroke-width: 1px; vector-effect: non-scaling-stroke; marker-start: url(#Circle); marker-end: url(#Triangle); stroke: #000000");
                 svgRoot.appendChild(path);
             }
         }
-        
+
         try {
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer t = factory.newTransformer();
@@ -390,5 +385,7 @@ public class Sentence {
         return result;
 
     }
+
+    
 
 }
