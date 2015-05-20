@@ -5,14 +5,6 @@
  */
 package syntactic.bush;
 
-import java.awt.color.ColorSpace;
-import java.awt.color.ICC_ColorSpace;
-import java.awt.color.ICC_Profile;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Šimon Priadka
@@ -34,7 +26,6 @@ public class ColorConverter {
         int g = (int) (255 * (1 - magenta) * (1 - black));
         int b = (int) (255 * (1 - yellow) * (1 - black));
         String hex = "#" + Integer.toHexString(r) + Integer.toHexString(g) + Integer.toHexString(b);
-        System.out.println(hex);
         return hex;
     }
 

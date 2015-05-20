@@ -28,6 +28,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.apache.batik.bridge.Viewport;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.transcoder.TranscoderException;
@@ -107,15 +108,6 @@ public class Sentence {
      *
      * @return one strinf full of parts of array
      */
-    public String toString() {
-        String result = "";
-        for (int i = 0; i < sentence.length; i++) {
-            result += sentence[i];
-            result += " ";
-        }
-        return result;
-    }
-
     /**
      * readSyntax() read syntax
      */
@@ -298,60 +290,40 @@ public class Sentence {
         svgRoot.setAttributeNS(null, "width", "100%");
         svgRoot.setAttributeNS(null, "heigth", "100%");
         svgRoot.appendChild(createDefs(doc, svgNS));
-        int y = 20;
-        int x = 20;
-        System.out.println(idSentence.length);
-        System.out.println(Arrays.toString(idSentence));
+        int y = 60;
+        int x = 10;
+        int counter = 0;
+        for (String str : sentence) {
+            if (str != null) {
+                Element phrase = doc.createElementNS(svgNS, "text");
+                phrase.setAttributeNS(null, "id", Integer.toString(counter));
+                phrase.setAttributeNS(null, "y", Integer.toString(y));
+                phrase.setAttributeNS(null, "x", Integer.toString(x));
+                str = "[" + str + "]";
+                x += 110;
+                phrase.setTextContent(str);
+                svgRoot.appendChild(phrase);
+            }
+            counter++;
+        }
         for (int i = 0; i < idSentence.length; i++) {
-            if (idSentence[i] != -1) {
-                Element textFrom = doc.createElementNS(svgNS, "text");
-                textFrom.setAttributeNS(null, "y", Integer.toString(y));
-                textFrom.setAttributeNS(null, "x", Integer.toString(x));
-                textFrom.setAttributeNS(null, "fill", "red");
-                String from = "[" + sentence[i] + "]";
-                String to = "[" + sentence[idSentence[i]] + "]";
-                int fromXCor = x + from.length() + 100;
-                int fromYCor = y - 5;
-                textFrom.setTextContent(from);
-                x += 200;
-                Element textTo = doc.createElementNS(svgNS, "text");
-                textTo.setAttributeNS(null, "y", Integer.toString(y));
-                textTo.setAttributeNS(null, "x", Integer.toString(x));
-                textTo.setTextContent(to);
-                int toXCor = x + from.length() - 50;
-                int toYCor = y - 5;
-                Element path = doc.createElementNS(svgNS, "path");
-                float aCx = fromXCor + 21.3561706542969f;
-                String curvedPath = "M " + fromXCor + " " + fromYCor + "A " + aCx + " " + aCx + " 0 0 1 " + toXCor + " " + toYCor;
+            if (idSentence[i] != - 1) {
+                Element from = doc.getElementById(Integer.toString(i));
+                Element to = doc.getElementById(Integer.toString(idSentence[i]));
+                int fromXcor = Integer.parseInt(from.getAttribute("x"));
+                int fromYcor = Integer.parseInt(from.getAttribute("y"));
+                int toXcor = Integer.parseInt(to.getAttribute("x"));
+                int toYcor = Integer.parseInt(to.getAttribute("y"));
+                float aCx = fromXcor + 21.3561706542969f;
+                String curvedPath = "M " + fromXcor + " " + fromYcor + "A " + aCx + " " + aCx + " 0 0 1 " + toXcor + " " + toYcor;
+                Element path = doc.createElementNS(svgNS,"path");
                 path.setAttributeNS(null, "d", curvedPath);
-                /*
-                Nastavi farbu podla pravdeposobnosti na odtien narp. ciernej,
-                Musime ale pouzit kod svg, ktory potom dame do stranky, lebo inak
-                sa to korektne nezobrazi (napr. v chrome je len cast medzi kruzkom a vrchom sipky
-                v tomto odtieni, napr. IE alebo Mozzila rovno vyplnia aj kruzok aj vrch sipky na tuto farbu
-                */
-                path.setAttributeNS(null, "stroke", ColorConverter.cmykToHex(0f, 0f, 0f, 0.1f));                                                        
-                path.setAttributeNS(null, "style", "fill: #e6e6e6; stroke-width: 1px; vector-effect: non-scaling-stroke; marker-start: url(#Circle); marker-end: url(#Triangle); stroke: #e6e6e6");
-                svgRoot.appendChild(textFrom);
+                path.setAttributeNS(null, "stroke", ColorConverter.cmykToHex(0f, 0f, 0f, 1f));                                                        
+                path.setAttributeNS(null, "style", "fill: none; stroke-width: 1px; vector-effect: non-scaling-stroke; marker-start: url(#Circle); marker-end: url(#Triangle); stroke: #000000");
                 svgRoot.appendChild(path);
-                svgRoot.appendChild(textTo);
-                y += 20;
-                x = 20;
-            } else if ((idSentence[i] == - 1) && ((sentence[i] != null))) {
-                if (!sentence[i].equals(".")) {
-                    Element text = doc.createElementNS(svgNS, "text");
-                    text.setAttributeNS(null, "y", Integer.toString(y));
-                    text.setAttributeNS(null, "x", Integer.toString(x));
-                    text.setAttributeNS(null, "fill", "red");
-                    String from = "[" + sentence[i] + "]";
-                    text.setTextContent(from);
-                    svgRoot.appendChild(text);
-                    y += 15;
-                }
-
             }
         }
-        //Vytvori out.xml zo sentence + pokus o path, dorobim to neskôr
+        
         try {
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer t = factory.newTransformer();
@@ -363,18 +335,6 @@ public class Sentence {
         } catch (TransformerException ex) {
             ex.printStackTrace();
         }
-        //Vytvori out.jpg. Neviem čo bude lepšie pre tu webku,
-        //či tam dať jpgčo, alebo xmlko
-        JPEGTranscoder t = new JPEGTranscoder();
-        TranscoderInput input = new TranscoderInput(doc);
-        try (FileOutputStream ostream = new FileOutputStream("out.jpg")) {
-            TranscoderOutput output = new TranscoderOutput(ostream);
-            // Save the image.
-            t.transcode(input, output);
-        } catch (TranscoderException ex) {
-            Logger.getLogger(Sentence.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
 
     /**
@@ -414,6 +374,20 @@ public class Sentence {
         defs.appendChild(markerTriangle);
         defs.appendChild(markerCircle);
         return defs;
+
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+        for (String s : sentence) {
+            if (s != null) {
+                result += "[" + s + "]";
+                result += " ";
+            }
+
+        }
+        return result;
 
     }
 

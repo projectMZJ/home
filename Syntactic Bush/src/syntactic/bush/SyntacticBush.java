@@ -65,4 +65,9 @@ public class SyntacticBush {
     public static int lastIndex(String str){
         return Integer.parseInt(str.split("\\.")[2]);
     }
+    
+     public String hello(){
+        return "HELLO";
+    }
+
 }
