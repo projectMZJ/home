@@ -122,7 +122,8 @@ public class Sentence {
                 Element syntax = (Element) syntaxes.item(i);
 
                 //zabyvat se jenom temi co maji status 1
-                if (syntax.hasAttribute("status") && Integer.parseInt(syntax.getAttribute("status")) == 1) {
+                if (syntax.hasAttribute("status") && Integer.parseInt(syntax.getAttribute("status")) == 1
+                    && !"clause".equals(syntax.getAttribute("tag"))) {
                     Integer indicator = lastIndex(syntax.getAttribute("nite:id")); //hodnosta ff.syntax.x
                     
                     NodeList childs = syntax.getElementsByTagName("nite:child");
@@ -188,6 +189,7 @@ public class Sentence {
             //zkopirovat pomocneho pole do idSentence, od ted je v idSentence pripraveno na relation
             System.arraycopy(array, 0, idSentence, 0, array.length);
             System.out.println(Arrays.toString(idSentence));
+            System.out.println(Arrays.toString(sentence));
         } catch (Exception e) {
             e.printStackTrace();
         }

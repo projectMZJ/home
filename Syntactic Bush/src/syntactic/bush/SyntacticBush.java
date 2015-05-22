@@ -37,14 +37,14 @@ public class SyntacticBush {
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(file);
             NodeList sentences = doc.getElementsByTagName("s");
-            Element sentence = (Element)sentences.item(0);
+            Element sentence = (Element)sentences.item(1);
             head = lastIndex(sentence.getAttribute("nite:id"));
             NodeList tokens = sentence.getElementsByTagName("token");
             idSentence = new int[tokens.getLength()];
             for (int i=0; i < tokens.getLength(); i++ ){
                 Element token = (Element) tokens.item(i);
                 idSentence[i] = lastIndex(token.getAttribute("nite:id"));
-                phrases.add(/*Integer.toString(lastIndex(token.getAttribute("nite:id"))) +*/ tokens.item(i).getTextContent());
+                phrases.add(tokens.item(i).getTextContent());
             }
             tail = head + tokens.getLength();
             Sentence s = new Sentence(tail,head,idSentence,phrases.toArray(new String[phrases.size()]));
