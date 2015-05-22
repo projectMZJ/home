@@ -31,13 +31,14 @@ public class SyntacticBush {
         int head,tail; //zacatek a konec vety
         List<String> phrases = new ArrayList<>(); //list slov ve vete
         int[] idSentence; //pole id z ff.text
+        int numberOfSentence = 0; //cislo vety, defaultne nula, pri next ++, pri prev --
         try {
             File file = new File("." + File.separator + "src" + File.separator + "ff.text.xml");
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(file);
             NodeList sentences = doc.getElementsByTagName("s");
-            Element sentence = (Element)sentences.item(1);
+            Element sentence = (Element)sentences.item(numberOfSentence);
             head = lastIndex(sentence.getAttribute("nite:id"));
             NodeList tokens = sentence.getElementsByTagName("token");
             idSentence = new int[tokens.getLength()];

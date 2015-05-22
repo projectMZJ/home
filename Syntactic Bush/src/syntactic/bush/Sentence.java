@@ -117,6 +117,7 @@ public class Sentence {
             //pomocne pole pro zapamatovani hodnot ff.syntax.x
             int[] array = new int[this.idSentence.length];
             Arrays.fill(array, -1);
+
             NodeList syntaxes = doc.getElementsByTagName("syntax");
             for (int i = 0; i < syntaxes.getLength(); i++) {
                 Element syntax = (Element) syntaxes.item(i);
@@ -125,12 +126,12 @@ public class Sentence {
                 if (syntax.hasAttribute("status") && Integer.parseInt(syntax.getAttribute("status")) == 1
                     && !"clause".equals(syntax.getAttribute("tag"))) {
                     Integer indicator = lastIndex(syntax.getAttribute("nite:id")); //hodnosta ff.syntax.x
-                    
+                   
                     NodeList childs = syntax.getElementsByTagName("nite:child");
                     for(int k = 0; k < childs.getLength(); k++) {
                         Element child = (Element) childs.item(k);
                         String href = child.getAttribute("href");
-
+                       
                         //parser href
                         int[] pom = parser(href);
                         int from = pom[0];
