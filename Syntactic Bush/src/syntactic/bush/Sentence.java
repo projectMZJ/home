@@ -48,6 +48,8 @@ public class Sentence {
         this.tail = tail;
         this.head = head;
         this.sentence = sentence;
+        this.sentence[this.sentence.length-2] = this.sentence[this.sentence.length-2] + this.sentence[this.sentence.length-1];
+        this.sentence[this.sentence.length-1] = null;
         this.idSentence = idSentence;
     }
 
@@ -122,58 +124,63 @@ public class Sentence {
                 //zabyvat se jenom temi co maji status 1
                 if (syntax.hasAttribute("status") && Integer.parseInt(syntax.getAttribute("status")) == 1) {
                     Integer indicator = lastIndex(syntax.getAttribute("nite:id")); //hodnosta ff.syntax.x
-                    Element child = (Element) syntax.getElementsByTagName("nite:child").item(0);
-                    String href = child.getAttribute("href");
+                    
+                    NodeList childs = syntax.getElementsByTagName("nite:child");
+                    for(int k = 0; k < childs.getLength(); k++) {
+                        Element child = (Element) childs.item(k);
+                        String href = child.getAttribute("href");
 
-                    //parser href
-                    int[] pom = parser(href);
-                    int from = pom[0];
-                    int to = pom[1];
+                        //parser href
+                        int[] pom = parser(href);
+                        int from = pom[0];
+                        int to = pom[1];
 
-                    //for skonci kdyz je from vetsi nez tail, tzn. uz jsme u dalsi vety
-                    //if(from > this.tail) break;
-                    //slouceni skupin do poli k sobe
-                    int indexTo = 0;
-                    int indexFrom = 0;
-                    int ok = 0;
-                    if (from != to + 1) {
+                        //for skonci kdyz je from vetsi nez tail, tzn. uz jsme u dalsi vety
+                        //if(from > this.tail) break;
+                        //slouceni skupin do poli k sobe
+                        int indexTo = 0;
+                        int indexFrom = 0;
+                        int ok = 0;
+                        if (from != to + 1) {
+                            int j;
+
+                            //nalezeni, kde indexu kde zacina a konci cast skupiny v sentence
+                            for (j = 0; j < tail - head; j++) {
+                                if (idSentence[j] == to) {
+                                    indexTo = j;
+                                    ok++;
+                                }
+                                if (idSentence[j] == from) {
+                                    indexFrom = j;
+                                }
+                            }
+
+                            //ulozeni vsech podcasti do jedne
+                            while (indexFrom != indexTo) {
+                                sentence[indexTo - 1] = sentence[indexTo - 1] + " " + sentence[indexTo];
+                                sentence[indexTo] = null;
+                                indexTo--;
+                            }
+                        }
+                    
+
+                        //kvuli vypisu
+                        
                         int j;
-
-                        //nalezeni, kde indexu kde zacina a konci cast skupiny v sentece
                         for (j = 0; j < tail - head; j++) {
                             if (idSentence[j] == to) {
                                 indexTo = j;
-                                ok++;
                             }
                             if (idSentence[j] == from) {
                                 indexFrom = j;
                             }
                         }
 
-                        //ulozeni vsech podcasti do jedne
-                        while (indexFrom != indexTo) {
-                            sentence[indexTo - 1] = sentence[indexTo - 1] + " " + sentence[indexTo];
-                            sentence[indexTo] = null;
-                            indexTo--;
+                        //ulozeni id z ff.syntax.x
+                        if (ok > 0) {
+                            array[indexFrom] = indicator;
                         }
                     }
-
-                    //kvuli vypisu
-                    int j;
-                    for (j = 0; j < tail - head; j++) {
-                        if (idSentence[j] == to) {
-                            indexTo = j;
-                        }
-                        if (idSentence[j] == from) {
-                            indexFrom = j;
-                        }
-                    }
-
-                    //ulozeni id z ff.syntax.x
-                    if (ok > 0) {
-                        array[indexFrom] = indicator;
-                    }
-
                     //System.out.println(sentence[indexFrom]); 
                 }
             }
