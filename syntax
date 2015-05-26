@@ -1,0 +1,29 @@
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           elementFormDefault="qualified">
+
+    <xs:element name="stream" msdata:Prefix="nite">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="syntax" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="child" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="href" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:string" use="required"/>
+			                  <xs:attribute name="tag" type="xs:string" use="required"/>
+                        <xs:attribute name="status" type="xs:integer" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="nite" msdata:Prefix="nite" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>                                  
+                               
+</xs:schema>
