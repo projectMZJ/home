@@ -156,12 +156,22 @@ public class Sentence {
                                     indexFrom = j;
                                 }
                             }
-
-                            //ulozeni vsech podcasti do jedne
-                            while (indexFrom != indexTo) {
-                                sentence[indexTo - 1] = sentence[indexTo - 1] + " " + sentence[indexTo];
-                                sentence[indexTo] = null;
-                                indexTo--;
+                            
+                            int cover = 0; //nektere jsou nefunkcni protoze se prekryvaji
+                            for(j = indexFrom; j < indexTo; j++){
+                                if(sentence[j] == null) {
+                                    cover++;
+                                }
+                                        
+                            }
+                                    
+                            if(cover == 0) {
+                                //ulozeni vsech podcasti do jedne
+                                while (indexFrom != indexTo) {
+                                    sentence[indexTo - 1] = sentence[indexTo - 1] + " " + sentence[indexTo];
+                                    sentence[indexTo] = null;
+                                    indexTo--;
+                                }
                             }
                         }
                     
