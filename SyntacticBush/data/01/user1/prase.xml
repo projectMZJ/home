@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<corpus description="annotated pHrase corpus" id="apc" links="ltxml1" type="standoff">
+    <reserved-attributes>
+        <identifier name="nite:id"/>
+        <starttime name="nite:s"/>
+        <endtime name="nite:e"/>
+    </reserved-attributes>
+    <reserved-elements>
+        <pointername name="nite:pointer"/>
+        <child name="nite:child"/>
+        <stream name="nite:stream"/>
+    </reserved-elements>
+    <codings path=".">
+        <interaction-codings>
+            <coding-file name="text">
+                <structural-layer name="sentence-layer" points-to="token-layer">
+                    <code name="s" text-content="false">
+                        <attribute name="np-complete" value-type="string"/>
+                    </code>
+                </structural-layer>
+                <time-aligned-layer name="token-layer">
+                    <code name="token" text-content="true"/>
+                </time-aligned-layer>
+            </coding-file>
+            <coding-file name="morphology">
+            	<structural-layer name="morpho-layer" recursive-draws-children-from="token-layer">
+            		<code name="morpho">
+	            		<attribute name="tag" value-type="string" />
+        	    		<attribute name="lemma" value-type="string" />
+        	    	</code>
+            	</structural-layer>
+            </coding-file>
+            <coding-file name="syntax">
+                <structural-layer name="syntax-layer" recursive-draws-children-from="token-layer">
+                    <code name="syntax">
+                        <attribute name="tag" value-type="string"/>
+                        <attribute name="status" value-type="string"/>
+                    </code>
+                </structural-layer>
+            </coding-file>
+            <coding-file name="syntax-annotation">
+                <structural-layer name="syntax-annotation-layer" recursive-draws-children-from="syntax-layer">
+                    <code name="sanno">
+                        <attribute name="annotator" value-type="string"/>
+                        <attribute name="level" value-type="string"/>
+                        <attribute name="date" value-type="string"/>
+                        <attribute name="status" value-type="string"/>
+                    </code>
+                </structural-layer>
+            </coding-file>
+            <coding-file name="syntax-relation">
+                <structural-layer name="syntax-relation-layer" recursive-draws-children-from="syntax-layer">
+                    <code name="srelation">
+                        <attribute name="type" value-type="string"/>
+                        <pointer number="1" role="in-relation-with" target="syntax-layer"/>
+                    </code>
+                </structural-layer>
+            </coding-file>
+            <coding-file name="syntax-relation-annotation">
+                <structural-layer
+                    name="syntax-relation-annotation-layer" recursive-draws-children-from="syntax-relation-layer">
+                    <code name="ranno">
+                        <attribute name="annotator" value-type="string"/>
+                        <attribute name="level" value-type="string"/>
+                        <attribute name="date" value-type="string"/>
+                        <attribute name="status" value-type="string"/>
+                    </code>
+                </structural-layer>
+            </coding-file>
+        </interaction-codings>
+    </codings>
+    <observations>
+        <observation name="ff"/>
+        <observation name="ff1000"/>
+    </observations>
+</corpus>
