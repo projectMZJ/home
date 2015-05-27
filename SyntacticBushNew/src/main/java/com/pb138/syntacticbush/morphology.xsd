@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+  
+    <xs:element name="nite:stream">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="morpho" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="nite:child">
+                                <xs:complexType>
+                                    <xs:attribute name="href" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="nite:id" type="xs:string" use="required"/>
+                        <xs:attribute name="tag" type="xs:string" use="required"/>
+                        <xs:attribute name="lemma" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="nite:id" type="xs:string" use="required"/>
+            <xs:attribute name="xmlns" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>                                   
+                                
+</xs:schema>
