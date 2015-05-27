@@ -1,0 +1,20 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://nite.sourceforge.net/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="child">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="href" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="stream">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="sanno" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="id"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attribute name="id" type="xs:string"/>
+</xs:schema>
