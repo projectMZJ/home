@@ -1,27 +1,37 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
 <xs:schema version="1.0"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
-           elementFormDefault="qualified">
+           elementFormDefault="qualified"
+           targetNamespace="http://nite.sourceforge.net/">
 
-    <xs:element name="stream" msdata:Prefix="nite">
+    <xs:element name="stream">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="s" maxOccurs="unbounded">
+                <xs:element name="s" maxOccurs="unbounded" form="unqualified">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="token" maxOccurs="unbounded">
+                            <xs:element name="token" maxOccurs="unbounded" form="unqualified" >
                                 <xs:complexType>
-                                    <xs:attribute name="id" type="xs:string" use="required"/>
+                                    <xs:simpleContent>
+                                    	<xs:extension base="xs:string">
+                                    	<xs:attribute name="id" type="xs:string" use="required" form="qualified"/>
+                                    	</xs:extension>
+                                    </xs:simpleContent>
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
-                        <xs:attribute name="id" type="xs:string" use="required"/>
-		                  	<xs:attribute name="np-complete" type="xs:boolean" use="required"/>
+                        <xs:attribute name="id" type="xs:string" use="required" form="qualified"/>
+		        <xs:attribute name="np-complete" type="xs:boolean" use="required"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
-            <xs:attribute name="id" type="xs:string" use="required"/>
-            <xs:attribute name="nite" msdata:Prefix="nite" type="xs:string" use="required"/>
+            <xs:attribute name="id" type="xs:string" use="required" form="qualified"/>
         </xs:complexType>
     </xs:element>                                  
                                
