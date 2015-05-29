@@ -28,5 +28,6 @@ public class ColorConverter {
         String hex = "#" + Integer.toHexString(r) + Integer.toHexString(g) + Integer.toHexString(b);
         return hex;
     }
+    
 
 }

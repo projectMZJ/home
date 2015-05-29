@@ -341,114 +341,6 @@ public class Sentence {
         }
     }
 
-    public Document createDocument() throws FileNotFoundException, IOException {
-        DOMImplementation domi = SVGDOMImplementation.getDOMImplementation();
-        String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
-        Document doc = domi.createDocument(svgNS, "svg", null);
-        Element svgRoot = doc.getDocumentElement();
-        svgRoot.setAttributeNS(null, "width", "100%");
-        svgRoot.setAttributeNS(null, "heigth", "100%");
-        svgRoot.setAttributeNS(null, "viewBox", "0 0 1000 400");
-        svgRoot.setAttributeNS(null, "onload", "drawPaths(getAllPaths())");
-        svgRoot.appendChild(createDefs(doc, svgNS));
-        int y = 100;
-        int x = 10;
-        int counter = 0;
-        for (String str : sentence) {
-            if (str != null && (!str.contains("null"))) {
-                Element phrase = doc.createElementNS(svgNS, "text");
-                phrase.setAttributeNS(null, "id", Integer.toString(counter));
-                phrase.setAttributeNS(null, "y", Integer.toString(y));
-                phrase.setAttributeNS(null, "x", Integer.toString(x));
-                phrase.setAttributeNS(null, "style", "font-size: 12px; stroke: #000000; opacity: 0"); //Nebudeme nič rátať, dáme to tam natvrdo a máme hotovson
-                str = "[" + str + "]";
-                x += str.length() * 6; //Neviem prečo, ale je to takto pekne, aj s 8čkou to ide dobre
-                phrase.setTextContent(str);
-                Element animate = doc.createElementNS(svgNS,"animate");
-                animate.setAttributeNS(null, "atributeType", "CSS");
-                animate.setAttributeNS(null, "attributeName", "opacity");
-                animate.setAttributeNS(null, "repeatCount", "1");
-                animate.setAttributeNS(null, "from", "0");
-                animate.setAttributeNS(null, "to", "1");
-                animate.setAttributeNS(null, "dur", "1s");
-                animate.setAttributeNS(null, "fill", "freeze");
-                phrase.appendChild(animate);
-                svgRoot.appendChild(phrase);
-            }
-            counter++;
-        }
-        for (int i = 0; i < idSentence.length; i++) {
-            if (idSentence[i] != - 1) {
-                Element from = doc.getElementById(Integer.toString(i));
-                Element to = doc.getElementById(Integer.toString(idSentence[i]));
-                int fromXcor = Integer.parseInt(from.getAttribute("x")) + ((from.getTextContent().length() / 2) * 7);
-                int toXcor = Integer.parseInt(to.getAttribute("x")) + ((to.getTextContent().length() / 2) * 7);
-                int fromYcor = Integer.parseInt(from.getAttribute("y"));
-                int toYcor = Integer.parseInt(to.getAttribute("y"));
-                if (fromXcor < toXcor){
-                    
-                    fromYcor -= 15;
-                    toYcor -= 15;
-                    
-                }
-                else{
-                    
-                    fromYcor += 15;
-                    toYcor += 15;
-                    
-                }
-                
-                float aCx = fromXcor + 21.3561706542969f;
-                String curvedPath = "M " + fromXcor + " " + fromYcor + "A " + aCx + " " + aCx + " 0 0 1 " + toXcor + " " + toYcor;
-                Element path = doc.createElementNS(svgNS, "path");
-                path.setAttributeNS(null, "d", curvedPath);
-                path.setAttributeNS(null, "stroke", ColorConverter.cmykToHex(0f, 0f, 0f, 1f));
-                path.setAttributeNS(null, "style", "fill: none; stroke-width: 1px; vector-effect: non-scaling-stroke; marker-start: url(#Circle); marker-end: url(#Triangle); stroke: #000000");
-                svgRoot.appendChild(path);
-            }
-        }
-        return doc;
-    }
-
-    /**
-     * Vytvori tvar konca sipky
-     *
-     * @param doc
-     * @param svgNS
-     * @return
-     */
-    private Element createDefs(Document doc, String svgNS) {
-        Element defs = doc.createElementNS(svgNS, "defs");
-        Element markerTriangle = doc.createElementNS(svgNS, "marker");
-        markerTriangle.setAttributeNS(null, "id", "Triangle");
-        markerTriangle.setAttributeNS(null, "viewBox", "-15 -5 20 20");
-        markerTriangle.setAttributeNS(null, "refX", "-3");
-        markerTriangle.setAttributeNS(null, "refY", "0");
-        markerTriangle.setAttributeNS(null, "markerWidth", "16");
-        markerTriangle.setAttributeNS(null, "markerHeight", "20");
-        markerTriangle.setAttributeNS(null, "orient", "auto");
-        Element path = doc.createElementNS(svgNS, "path");
-        path.setAttributeNS(null, "d", "M -15 -5 L 0 0 L -15 5 z");
-        markerTriangle.appendChild(path);
-        Element markerCircle = doc.createElementNS(svgNS, "marker");
-        markerCircle.setAttributeNS(null, "id", "Circle");
-        markerCircle.setAttributeNS(null, "viewBox", "-5 -5 10 10");
-        markerCircle.setAttributeNS(null, "refX", "0");
-        markerCircle.setAttributeNS(null, "refY", "0");
-        markerCircle.setAttributeNS(null, "markerWidth", "6");
-        markerCircle.setAttributeNS(null, "markerHeight", "6");
-        markerCircle.setAttributeNS(null, "orient", "auto");
-        Element circle = doc.createElementNS(svgNS, "circle");
-        circle.setAttributeNS(null, "cx", "0");
-        circle.setAttributeNS(null, "cy", "0");
-        circle.setAttributeNS(null, "r", "5");
-        //circle.setAttributeNS(null, "fill", "black");
-        markerCircle.appendChild(circle);
-        defs.appendChild(markerTriangle);
-        defs.appendChild(markerCircle);
-        return defs;
-
-    }
 
     @Override
     public String toString() {
@@ -464,26 +356,14 @@ public class Sentence {
     }
 
     /**
-     * Returns svg document for this s, will be used in web application
-     *
-     * @param doc
-     * @return
+     * @return the notTogetherWord
      */
-    public String documentToString(Document doc) {
-        try {
-            StringWriter sw = new StringWriter();
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-
-            transformer.transform(new DOMSource(doc), new StreamResult(sw));
-            return sw.toString();
-        } catch (IllegalArgumentException | TransformerException ex) {
-            throw new RuntimeException("Error converting to String", ex);
+    public List<Integer> getNotTogetherWord() {
+        List<Integer> result = new ArrayList<>();
+        for (int i=0; i < notTogetherWord.length; i++){
+            result.add(notTogetherWord[i]);
         }
+        return result;
     }
 
 }

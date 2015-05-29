@@ -41,12 +41,15 @@
         <br/>
         <h2>Select package:</h2>
         <br/>
+        
         <br/>
-        <form  method="post" align="center" enctype="multipart/form-data">
-            <select name="pack" id="pack">
-                <option value="01">data01</option>
-                <option value="02">data02</option>
+        <form align="center" id="formSelect" method="post" action="${pageContext.request.contextPath}/bush/select">
+            <select name="selection" id="pack">
+                <option value="00" ${data.equals("00") ? 'selected' : ''}>Please select data ...</option>
+                <option value="01" ${data.equals("01") ? 'selected' : ''}>01</option>
+                <option value="02" ${data.equals("02") ? 'selected' : ''}>02</option>
             </select>
+            <button name="selectButton" type="submit">Select</button>
         </form>
         <hr width="75%" align="center" size="1px" >
 
@@ -106,17 +109,6 @@
             bottom:10px;
             right: 10px;
         }
-        #footer button {
-            background-color:#006299;
-            color:#fff;
-            border:1px solid #006299;
-            border-radius:5px;
-            padding: 5px 10px;
-        }
-        #footer button:hover {
-            background-color:#368fe0;
-            color:#000;
-        }
         #pack {width: 400px;}
         #paragraph {position: absolute;
                     bottom: 10px;
@@ -132,15 +124,6 @@
         #centerFooter {position: absolute;
                        bottom: 10px;
                        left: 50%;}
-        #centerFooter button {background-color:#006299;
-                              color:#fff;
-                              border:1px solid #006299;
-                              border-radius:5px;
-                              padding: 5px 10px;}
-        #centerFooter button:hover {
-            background-color:#368fe0;
-            color:#000;
-        }
         #sentenceN {
             font-family:Georgia,serif;
             color:#4E443C;
@@ -148,6 +131,18 @@
             text-transform: none; 
             font-weight: 100; 
 
+        }
+
+        button{background-color:#006299;
+                     color:#fff;
+                     border:1px solid #006299;
+                     border-radius:5px;
+                     padding: 5px 10px;
+        }
+        
+        button:hover{
+            background-color:#368fe0;
+            color:#000;
         }
     </style>
 </html>

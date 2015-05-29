@@ -5,8 +5,7 @@
  */
 package com.pb138.syntacticbushweb;
 
-import com.pb138.syntacticbush.Sentence;
-import com.pb138.syntacticbush.SyntacticBush;
+import com.pb138.syntacticbush.Evaluation;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,8 +22,11 @@ public class SyntacticServlet extends HttpServlet {
 
     private static final String LIST_JSP = "/list.jsp";
     public static final String URL_MAPPING = "/bush";
-    private SyntacticBush bush = new SyntacticBush(SyntacticBush.getFirstText());
-    private Sentence currentSentence = bush.firstSentence();
+    private String currentImage = "";
+    private WebBush webBush = new WebBush();
+    private Evaluation eval;
+    private String data;
+    
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -37,11 +39,18 @@ public class SyntacticServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         showSentence(request, response);
     }
-
+    
+    
+    /**
+     * Shows parameters, used in get method
+     * @param request
+     * @param response 
+     */
     private void showSentence(HttpServletRequest request, HttpServletResponse response) {
         try {
-            request.setAttribute("currentSentence", bush.documentToString(currentSentence.createDocument()));
-            request.setAttribute("indexOfCurrentSentence", bush.displayCurrentSentence(currentSentence));
+            request.setAttribute("currentSentence", currentImage);
+            request.setAttribute("indexOfCurrentSentence", webBush.displayingSentence(eval, data));
+            request.setAttribute("data", data);
             request.getRequestDispatcher(LIST_JSP).forward(request, response);
         } catch (IOException | ServletException e) {
             e.printStackTrace();
@@ -63,29 +72,45 @@ public class SyntacticServlet extends HttpServlet {
         switch (action) {
             case "/prev":
                 try {
-                    currentSentence = bush.prevSentence(currentSentence);
+                    eval = webBush.prevSentence(data, eval);
+                    currentImage = webBush.documentToString(eval.createDocument());
                     response.sendRedirect(request.getContextPath() + URL_MAPPING);
                     return;
-                } catch (IOException | ArrayIndexOutOfBoundsException e) {
+                } catch (IOException | ArrayIndexOutOfBoundsException | NullPointerException ex) {
                     showSentence(request, response);
                 }
             case "/next":
                 try {
-                    currentSentence = bush.nextSentence(currentSentence);
+                    eval = webBush.nextSentence(data, eval);
+                    currentImage = webBush.documentToString(eval.createDocument());
                     response.sendRedirect(request.getContextPath() + URL_MAPPING);
                     return;
-                } catch (IOException | ArrayIndexOutOfBoundsException e) {
+                } catch (IOException | ArrayIndexOutOfBoundsException | NullPointerException ex) {
                     showSentence(request, response);
                 }
             case "/goto":
-                int to = Integer.parseInt(request.getParameter("gotoField"));
+                
                 try{
-                    currentSentence = bush.goToSentence(to);
+                    int to = Integer.parseInt(request.getParameter("gotoField"));
+                    eval = webBush.goToSentence(data, to);
+                    currentImage = webBush.documentToString(eval.createDocument());
                     response.sendRedirect(request.getContextPath() + URL_MAPPING);
                     return;
-                } catch (IOException | ArrayIndexOutOfBoundsException e) {
+                } catch (IOException | ArrayIndexOutOfBoundsException | NumberFormatException ex) {
                     showSentence(request, response);
-                } 
+                }
+            case "/select":
+                
+                try{
+                    data = (String)request.getParameter("selection");
+                    eval = webBush.firstEvaluation(data);
+                    currentImage = webBush.documentToString(eval.createDocument());
+                    response.sendRedirect(request.getContextPath() + URL_MAPPING);
+                    return;
+                }
+                catch (Exception ex){
+                    showSentence(request, response);
+                }
         }
     }
 
