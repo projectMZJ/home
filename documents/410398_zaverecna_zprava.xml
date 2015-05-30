@@ -1,0 +1,75 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Závìreèná zpráva</title>
+
+    <author>
+      <firstname>Petra</firstname>
+
+      <surname>Jouzová</surname>
+
+      <affiliation>
+        <orgname>Masarykova Univerzita, Fakulta informatiky</orgname>
+      </affiliation>
+    </author>
+
+    <pubdate>27.5.2015</pubdate>
+  </articleinfo>
+
+  <section>
+    <title>Rozparsování dat formátu xml</title>
+
+    <para>Jako svùj hlavní úkol jsem si vybrala získání dat z dokumentù xml, 
+    která reprezentují výsledky analýzy vìt uživatele. Data jsou uložena v šesti
+    rùzných xml dokumentech. Pro tvorbu bylo potøeba rozparsovat tøi z nich, a
+    to ff.text.xml, ff.syntax.xml a ff.syntax-relation.xml.
+    </para>
+    <para>Pro rozparsování xml byla vytvoøena tøída Sentence. Svùj úkol jsem
+    rozdìlila do tøí funkcí, které se postupnì volají v konstruktoru tøídy:
+    readText(), readSyntax(), readRelation().
+    Dùležité jsou pro další zpracování dat a vykreslení SVG atributy String[] 
+    sentence a Int[] idSentence.
+    Funkce readText() uloží vìtu, která se má právì vypsat do pole sentence
+    a jejich id do idSentence. Funkce readSyntax() upraví sentence, tak že
+    propojí ty slova, která patøí k sobì (na výstupu reprezentováno jako slova 
+    v [], pø. [ve tøetí tøídì]). Volná místa v poli naplní hodnotou null.
+    Do idSentence nastaví id syntaxu. Funkce readRelation() po pøeètení 
+    ff.syntax-realtion.xml uloží do idSentence data pro následné vykreslení 
+    šipek mezi slovy (ve výstupu SVG).</para>
+    <para> V tìchto tøech funkcích využívám pro parsování rozhraní DOM v 
+    kombinaci s programovacím jazykem Java.  </para>
+    <para> Tøída Sentence se vytváøí pro každého ohodnocovatele nová a její
+    data jsou následnì zpracována ve tøídì Evaluation.</para>
+  
+  </section>
+
+  <section>
+    <title>Komplikace</title>
+    <para> V parsování dat nastaly tøi komplikace.</para>
+    <para> První komplikací byl pouze detail, který interpunkèní znaménka
+    vykresloval v samostatném poli. Øešením bylo pøidání znamének k poli
+    pøedcházejícímu.</para>
+    <para> Druhá komplikace nastala ve chvíli, kdy mìly být spojeny v poli
+    slova, která nestojí vedle sebe ve vìtì. Øešení této komplikace se 
+    vyøešilo pøidáním nového atributu notTogetherWord, které si tyto skupiny
+    pamatuje, následnì jsou tyto slova v SVG vykresleny èervenì.</para>
+    <para> Poslední komplikace se objevila pøi pøipojení hodnocení druhého
+    uživatele, který ohodnotil pravdivì dvì skupiny slov, které se pøekrývaly.
+    Tento problém se vyøešil vynecháním všech syntax, které mají tag roven
+    "clause", a pøidáním podmínky pokud je v prvcích pole, které se mají
+    spojit hodnota null, tak tento element ignorovat.</para>
+  </section>
+
+  <section>
+    <title>Zhodnocení projektu</title>
+
+    <para>Jednalo se o nejvìtší týmový projekt, na jakém jsem se zatím
+    podílela. Povedlo se nám vytvoøit funkèní webovou stránku, vyzkoušeli jsme 
+    si práci s nástroji pro zpracování XML, nauèili jsme se používat Git a 
+    vyzkoušeli jsme si, jak probíhá práce ve vìtším týmu. Tento projekt byl pro
+    mì velkým pøínosem a získané znalosti a zkušenosti jistì v budoucnu 
+    využiji.</para>
+  </section>
+</article>
