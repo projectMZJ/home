@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           targetNamespace="http://nite.sourceforge.net/">
+  
+<xs:element name="stream">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="srelation" maxOccurs="unbounded" form="unqualified">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="pointer">
+                                <xs:complexType>
+									<xs:attribute name="role" type="xs:string" use="required"/>
+                                    <xs:attribute name="href" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+							<xs:element name="child">
+                                <xs:complexType>
+                                    <xs:attribute name="href" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:string" use="required" form="qualified"/>
+                        <xs:attribute name="type" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:string" use="required" form="qualified"/>
+        </xs:complexType>
+    </xs:element>                                   
+                                
+</xs:schema>
