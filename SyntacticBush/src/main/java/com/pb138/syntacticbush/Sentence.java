@@ -33,23 +33,23 @@ import org.w3c.dom.DOMImplementation;
 import org.xml.sax.SAXException;
 
 /**
- * Trida pro parsovani xml.
- * @author prazak, jouzova
+ * Class for parsing xml.
+ * @author jouzova
  */
 public class Sentence {
 
-    private Integer tail; /** index konce vety */ 
-    private Integer head; /** index zacatku vety */
-    private String[] sentence; /** veta ulozena v poli po slovech */
-    private int[] idSentence; /** pole kazdemu slovu v poli sentence prideluje jeho cislo v ff.text.xml */
-    private int[] notTogetherWord; /** pole pro slova, ktera nejsou vedle sebe */
+    private Integer tail; /** index of end of sentence */ 
+    private Integer head; /** index of start of sentene */
+    private String[] sentence; /** word of sentence saved in array */
+    private int[] idSentence; /** helper array for sentence */
+    private int[] notTogetherWord; /** array for words, which they are next to each other */
     
     /**
-     * Konstruktor sentence.
-     * @param head pozice zacatku vety
-     * @param text File k ff.text
-     * @param syntax File k ff.syntax
-     * @param relation File k ff.syntax-relation
+     * Constructor of sentence.
+     * @param head position of start of sentence
+     * @param text File to ff.text
+     * @param syntax File to ff.syntax
+     * @param relation File to ff.syntax-relation
      */
     public Sentence(Integer head, File text, File syntax, File relation) {
         this.head = head;
@@ -61,7 +61,6 @@ public class Sentence {
         readRelation(relation);
     }
     /**
-     * Vrati idSentence pole obsahujici relation
      * @return idSentence
      */
     public int[] getIdSentence() {
@@ -69,7 +68,6 @@ public class Sentence {
     }
 
     /**
-     * Vratit pozici pocatku vety
      * @return the head
      */
     public Integer getHead() {
@@ -77,7 +75,6 @@ public class Sentence {
     }
 
     /**
-     * Nastavi pozici pocatku vety
      * @param head the head to set
      */
     public void setHead(Integer head) {
@@ -85,7 +82,6 @@ public class Sentence {
     }
 
     /**
-     * Vrati pole skupin vety
      * @return sentence
      */
     public String[] getSentence() {
@@ -93,9 +89,9 @@ public class Sentence {
     }
 
     /**
-     * Rozparsovani ff.syntax, idSentence napleno nite:id, 
-     * sentence naplneno skupinami slov nebo null.
-     * @param file File k ff.syntax
+     * Parse ff.syntax-xml, idSentence fill in by nite:id, 
+     * sentence fill in by groups of words or null.
+     * @param file File to ff.syntax
      */
     private void readSyntax(File file) {
         try {
@@ -203,18 +199,17 @@ public class Sentence {
     }
     
     /**
-     * Vraci treti cast vyrazu ff.neco.cislo.
-     * @param str retezec ve tvaru ff.neco.cislo
-     * @return cislo
+     * Return third part of expression ff.something.number.
+     * @param str string in shape ff.something.number
+     * @return number
      */
     public static int lastIndex(String str) {
         return Integer.parseInt(str.split("\\.")[2]);
     }
     
     /**
-     * Rozparsovani ff.syntax-relation, idSentence naplneno
-     * indexy relation.
-     * @param file File k ff.syntax-relation
+     * Parsing ff.syntax-relation, idSentence fill in by index of relation
+     * @param file File to ff.syntax-relation
      */
     private void readRelation(File file) {
         try {
@@ -280,10 +275,10 @@ public class Sentence {
     }
 
     /**
-     * Funkce na parsovani href.
+     * Function to parse href.
      *
-     * @param href atribut nite
-     * @return pole, array[0] první indikator, pole [1] druhy indikator
+     * @param href attribut nite
+     * @return array, array[0] first indicator, array[1] second indicator
      */
     public int[] parser(String href) {
         Pattern pattern = Pattern.compile("[0-9]+");
@@ -302,9 +297,9 @@ public class Sentence {
     }
     
     /**
-     * Rozparsovani ff.text, idSentece obsahuje indexy ff.text.x
-     * Sentence obsahuje vetu
-     * @param file File k ff.text
+     * Parsing ff.text, idSentece contains indexs of ff.text.x
+     * Sentence contains all sentence
+     * @param file File to ff.text
      */
     private void readText(File file) {
         List<String> phrases = new ArrayList<>(); //list slov ve vete
