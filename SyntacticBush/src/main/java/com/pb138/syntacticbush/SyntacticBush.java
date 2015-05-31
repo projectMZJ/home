@@ -29,7 +29,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Trida pro projeni trid.
+ * Class for connect of class
  * @author prazak,jouzova, priadka, macejovsky
  */
 public class SyntacticBush {
@@ -38,10 +38,18 @@ public class SyntacticBush {
      */
     private int[] allSentencesIndexes;
     
+    /**
+     * Constructor
+     * @param file
+     */
     public SyntacticBush(File file) {
         loadAllSentences(file);
     }
-
+    
+    /**
+     * Method for load all sentence
+     * @param file 
+     */
     private void loadAllSentences(File file) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -62,10 +70,8 @@ public class SyntacticBush {
         }
     }
     
-    
-    
     /**
-     * Na zkousku---------------------------------
+     * Main
      * @param args 
      */
     public static void main(String[] args) {
@@ -108,6 +114,10 @@ public class SyntacticBush {
         return allSentencesIndexes;
     }
     
+    /**
+     * Method for convert document to String
+     * @param doc document
+     */
     public static String documentToString(Document doc) {
         try {
             StringWriter sw = new StringWriter();
