@@ -14,20 +14,20 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Trida pro vytvoreni pravdepodobnosti.
+ * Class for creation probability.
  * @author pražák
  */
 public class Evaluation {
 
-    private List<Sentence> evaluationSentence; /** ulozeni objektu tridy Sentence */
-    private List<String[]> listSentence; /** vety pro SVG*/
-    private List<Integer> probabilitySentence;/** pravdepodobnost vet */
-    private List<List<Integer[][]>> relation; /** pravdepodobnost a relation ulozene ve 2d poli pro SVG */
-    private int denominator; /** jmenovatel pro pravdepodobnost */
+    private List<Sentence> evaluationSentence; /** save object from class Sentence */
+    private List<String[]> listSentence; /** sentence for SVG*/
+    private List<Integer> probabilitySentence;/** probability of sentence */
+    private List<List<Integer[][]>> relation; /** probability and relation saved in 2d array for SVG */
+    private int denominator; /** denominator for probability */
 
     /**
-     * Konstruktor pro vytvoreni pravdepodobnosti.
-     * @param e list s prvky tridy Sentence
+     * Constructor for creation probability.
+     * @param e list with object from class Sentence
      */
     public Evaluation(List<Sentence> e) {
         this.listSentence = new ArrayList<>();
@@ -40,7 +40,7 @@ public class Evaluation {
     }
 
     /**
-     * Funkce vraci list vet, Size listu udava pocet obrazku SVG.
+     * Function which return list of sentence, Size of list is number of pictures in SVG.
      *
      * @return listSentence
      */
@@ -49,9 +49,8 @@ public class Evaluation {
     }
 
      /**
-     * Funkce vraci pravdepodobnost ohodnoceni vet
-     * Prvnich n prvku jsou pravdepodobnosti na pozicich
-     * stejnych jako listSentence.
+     * Function return probability of evaluated sentence
+     * 
      * @return probabilitySentence
      */
     public List<Integer> getProbabilitySentence() {
@@ -59,7 +58,7 @@ public class Evaluation {
     }
 
      /**
-     * Funkce vrati jmenovatel pravdepodobnosti.
+     * Function return denominator of probability.
      * @return denominator
      */
     public int getDenominator() {
@@ -67,12 +66,11 @@ public class Evaluation {
     }
 
     /**
-     * Vrati list ktery ma delku poctu SVG obrazku, kazda polozka listu
-     * je dalsi list delky vety v Sentence, ktere postupne obsahuji 2D pole
-     * pole[pocet ohodnotitelu vety][2] obsahuje dvojice idSentence a pst.
-     * Priklad: pole[0][0] - idSentence[0]
-     * pole[0][1] - pst sipky
-     *
+     * Return list, each item of list is another list with length of sentences in Sentence,
+     * which contain 2D array
+     * array[number of evaluator of sentence][2] contains pair idSentence and probability.
+     * Example: array[0][0] - idSentence[0], array[0][1] - probability of arrow
+     * 
      * @return relation
      */
     public List<List<Integer[][]>> getRelation() {
@@ -281,14 +279,14 @@ public class Evaluation {
     }
 
     /**
-     * Naplni pole arrayOfpro hodnotami pst a idsentence.
+     * Method with fill array arrayOfPro with value of probability and idSentence.
      *
-     * @param arrayOfpro pole idsentence a pst
+     * @param arrayOfpro array idSentence and probability
      * @param length arrayOfpro[length][2]
-     * @param position pozice v idSentence, kterou zrovna chceme
-     * @param index pole indexu kde jsou vety stejne rozdelene
+     * @param position in idSentence, which we want now
+     * @param index array of index, where sentence have same dividing
      *
-     * @return vyplnene pole
+     * @return fill arrayOfPro
      */
     public Integer[][] fillArray(Integer[][] arrayOfpro, int length, int position, int[] index) {
         int[] indexID = getEvaluationSentence().get(index[0]).getIdSentence();
@@ -317,7 +315,7 @@ public class Evaluation {
     }
 
     /**
-     * Metoda pro spocitani pravdepodobnosti sipek
+     * Method for counting probability of arrows
      */
     private void compareRelation() {
         int evaluator = 0;
@@ -359,8 +357,7 @@ public class Evaluation {
     }
 
     /**
-     * Metoda pro spocitani pravdepodnosti a rozdeleni jednotlivych vet podle
-     * ohodnoceni.
+     * Methods for counting probability and dividing of sentence according to evalution.
      */
     private void compareSentence() {
         getListSentence().add(getEvaluationSentence().get(0).getSentence());
