@@ -24,13 +24,19 @@ import org.w3c.dom.Document;
 
 /**
  *
- * @author Game
+ * @author Šimon Priadka
  */
 public class WebBush {
 
     private Map<String, File> dataDir = new HashMap<>();
     private File dataLoc = new File("D:\\Documents\\PB138\\SB\\SyntacticBushWeb\\data");
     
+    /** 
+     * Returns list of sentences at given index
+     * @param data Data from which sentences are going to be selected
+     * @param index of the sentence
+     *
+     */
     private List<Sentence> getEvaluationAtIndex(String data, int index) {
 
         List<Sentence> result = new ArrayList<>();
@@ -66,11 +72,25 @@ public class WebBush {
         System.out.println(bush.dataLoc.getAbsolutePath());
 
     }
-
+    
+    /** Gets first evaluation at given data
+     * @param data data to be chosen from
+     * @return first Evaluation
+     * 
+     * 
+     * 
+     */
     public Evaluation firstEvaluation(String data) {
         return new Evaluation(getEvaluationAtIndex(data, 0));
     }
-
+    
+    
+    /**
+     * Returns next evaluation
+     * @param data data to be chosen from
+     * @param currentEvaluation current evaluation
+     * @return next evaluation from current evaluation
+     */
     public Evaluation nextSentence(String data, Evaluation currentEvaluation) {
         try {
             int sentenceIndex = currentEvaluation.getEvaluationSentence().get(0).getHead();
@@ -99,6 +119,12 @@ public class WebBush {
 
     }
 
+    /**
+     * Returns previous evaluation
+     * @param data data to be chosen from
+     * @param currentEvaluation current evaluation
+     * @return previous evaluation from current evaluation
+     */
     public Evaluation prevSentence(String data, Evaluation currentEvaluation) {
         try {
             int sentenceIndex = currentEvaluation.getEvaluationSentence().get(0).getHead();
@@ -116,7 +142,14 @@ public class WebBush {
             return null;
         }
     }
-
+    
+    
+    /**
+     * Returns evaluation at given index
+     * @param data data to be chosen from
+     * @param index index of the sentence
+     * @return evaluation at given index
+     */
     public Evaluation goToSentence(String data, int index) {
         try {
             int realIndex = index - 1;
@@ -131,7 +164,12 @@ public class WebBush {
         }
 
     }
-
+    
+    /**
+     * Returns String representation of the document
+     * @param doc Document to be represented
+     * @return String representation of document
+     */
     public String documentToString(Document doc) {
         try {
             StringWriter sw = new StringWriter();
@@ -148,7 +186,13 @@ public class WebBush {
             return "";
         }
     }
-
+    
+    /**
+     * Returns String representation of the current sentence displayed
+     * @param e Evaluation from which is going to be get the index
+     * @param data data pack of the evaluation
+     * @return String representation displaying the index of sentence
+     */
     public String displayingSentence(Evaluation e, String data) {
         try {
             SyntacticBush bush = new SyntacticBush(getTextAtData(data));
