@@ -79,6 +79,7 @@ public class Evaluation {
     
     /**
      * Creates text element of the document
+     * @author Šimon Priadka
      * @param doc Document from wich is going to be created
      * @param ns Namespace of the document
      * @param root Element where the text elements are going to be appended
@@ -134,6 +135,7 @@ public class Evaluation {
     
     /**
      * Creates paths that are going to represent relation between words
+     * @author Šimon Priadka
      * @param doc Document from which is going to be created
      * @param ns Namespace of the document
      * @param root Element to be appended to
@@ -201,6 +203,7 @@ public class Evaluation {
     
     /**
      * Creates animation of the toBeAnimated element
+     * @author Šimon Priadka
      * @param doc Document from which is going to be created
      * @param ns Namespace of the document
      * @param toBeAnimated Element to be animated
@@ -220,6 +223,7 @@ public class Evaluation {
     
     /**
      * Creates document, that is going to be visualized
+     * @author Šimon Priadka
      * @return document
      */
     public Document createDocument() {
@@ -227,7 +231,7 @@ public class Evaluation {
         String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
         Document doc = domi.createDocument(svgNS, "svg", null);
         Element svgRoot = doc.getDocumentElement();
-        int totalHeight = denominator * 200;
+        int totalHeight = 400;
         svgRoot.setAttributeNS(null, "width", "100%");
         svgRoot.setAttributeNS(null, "heigth", "100%");
         svgRoot.setAttributeNS(null, "style", "width: 1000px; height: " + totalHeight + "px;");
@@ -241,6 +245,7 @@ public class Evaluation {
 
     /**
      * Creates definitions of the marker, that are going to be used further in the code
+     * @author Šimon Priadka
      * @param doc Document from which is going to be created
      * @param svgNS Namespace of the element
      * @return Element of the definitions
