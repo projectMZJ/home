@@ -15,11 +15,11 @@ public class ColorConverter {
     /**
      * Returns hexadecimal representation for given colour in hexadecimal format, that is gonna be used firther in repersentation of the data
      * 
-     * @param cyan
-     * @param magenta
-     * @param yellow
-     * @param black
-     * @return 
+     * @param cyan Percentage of the color cyan in the result color
+     * @param magenta Percentage of the color magenta in the result color
+     * @param yellow Percentage of the color yelllow in the result color
+     * @param black Percentage of the color black in the result color
+     * @return hex string of the color based on arguments
      */
     public static String cmykToHex(float cyan, float magenta, float yellow, float black) {
         int r = (int) (255 * (1 - cyan) * (1 - black));
