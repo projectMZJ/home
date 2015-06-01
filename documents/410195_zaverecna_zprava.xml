@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Závěrečná zpráva</title>
+
+    <author>
+      <firstname>Oliver</firstname>
+
+      <surname>Mačejovský</surname>
+
+      <affiliation>
+        <orgname>Masarykova Univerzita, Fakulta informatiky</orgname>
+      </affiliation>
+    </author>
+
+    <pubdate>2.6.2015</pubdate>
+  </articleinfo>
+
+  <section>
+    <title>Úvod do projektu</title>
+
+    <para>Moja práca na projekte bola hlavne analytická. Na začiatku projektu som sa snažil čo
+	najlepšie pochopiť zadanie a vymyslieť k nemu správny proces. Vizualizácia vychádzala z už fungujúcej
+	knižnice, takže bolo potrebné zistiť ako knižnica funguje a ako vyzerajú výstupné data. Data boli
+	v prehľadnej forme, takže si vyžadovali len správne načítať a uložiť</para>
+  </section>
+
+  <section>
+    <title>Class Sentence</title>
+
+    <para>Triedu Sentence som navrhol ako základným dátovým útvarom pre vizualizáciu
+	samostatnej vety. Veta uložená v poli, kde každé slovo má pred sebou ešte uložený index
+	pozície vo vete, pomocne polé určovalo id v XML súbore, ktoré sme potrebovali na identifikáciu
+	v rámci XML súboroch. Trieda obsahuje aj head a tail pre prehľad začiatku a konca vety v XML
+	súbore</para>
+  </section>
+
+  <section>
+    <title>GUI</title>
+
+    <para>U GUI sme sa snažili o vysokú prehľadnosť, s dôrazom na výstupný SVG obrázok a
+	o prípadne rozšírenie vizualizácie. Pôvodný návrh tvorila stromová štruktúra, ktorú sme ale
+	nakoniec prepracovali na výber z comboboxu a následného preklikávania ako v "galérii fotografií"
+	s možnosťou preskočit na nejakú vetu</para>
+  </section>
+  
+  <section>
+    <title>Ziskané know-how</title>
+
+    <para>Projekt ma naučil základnej práce s GITom, ukazál mi ako doležité je mať
+	organizovaný tým a hlavne, že reprezentácia dát v XML je veľmi prehľadná a na 
+	spracovanie rýchla a jednoduchá</para>
+  </section>
+
+</article>
