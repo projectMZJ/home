@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "../docbook-xml-4.5/docbookx.dtd">
+
+<article>
+  <articleinfo>
+    <title>DocBook Intro</title>
+    <author>
+      <firstname>Šimon</firstname>
+      <surname>Priadka</surname>
+        <affiliation>
+          <orgname>Masarykova Univerzita, Fakulta informatiky</orgname>
+        </affiliation>
+    </author>
+    <pubdate>28.5.2015</pubdate>
+  </articleinfo>
+
+ <section>
+  <title>Vytvorenie webového rozhrania</title>
+  <para>
+    Ako svoju úlohu som si vybral vytvorenie webového rozhrania pre našu aplikáciu a zobrazenie výsledných dát vo formáte SVG. Keďže backend aplikácie je napísaný celý v jazyku Java, rozhodol som sa použiť technológiu JSP, aby komunikovala s našou aplikačnou vrstvou.
+  </para>
+  <para>
+    Skúsenosti s JSP som nadobudol v predmete PV168. Znalosť jazyku HTML bola pre mňa doteraz neznámou, ale vďaka kamarátovi Samuelovi Adámikovi bolo tvorenie web-stránky jednoduchšie. Stretol som sa tu aj s kaskádovymi štýlmi, ktoré boli použité pre lepší estetický zážitok.
+  </para>
+  <para>
+    K výslednej animácii šípiek som použil Javascript. S týmto jazykom som doteraz nemal skúsenosti.
+  </para>
+</section>
+<section>
+    <title>Vizualizácia dát pomocou SVG</title>
+    <para>
+      Dokument sa vytvára v triede Evaluation, konkrétne v metóde createDocument(). Tá spolupracuje s použitou knižnicou batik od firmy Apache. Táto knižnica poskytuje rozhranie DOM, ktoré mi neskôr uľahčilo dynamickú tvorbu dokumentu. Využili sme balík batik-all.jar, ktorý obsahuje všetko potrebné pre zkompilovanie kódu. Najskôr vytváram tzv. markere, ktoré budú použité na reprezentovanie začiatku a konca šípky. Pre vytvorenie týchto markerov som použil online editor http://www.drawsvg.org/, ktorý umožňuje následný export do súboru svg, odkiaľ boli vytiahnuté markere. 
+    </para>
+    <para>
+      Následne sa tvoria textové elementy, na ktoré budú v neskôr aplikované šípky. Tieto textové elementy so sebou nesú unikátne ID, ktoré neskôr pomáha pri vytváraní šípiek. Zároveň sa pre vizualizačný efekt použije animácia, ktorá vyplní v časovom roszahu 1s farbu na 100%. 
+    </para>
+    <para>
+      V poslednom kroku sa vytvárajú šípky, ktoré značia vzťahy medzi slovami. Tie používaju zmienené ID textov pre získanie X-ovej a Y-ovej súradnice bodov šípky. Podĺa potreby je im pridelená kruhová, alebo eliptická krivka. Následne sa v strede jej dĺžky vytvorí textový element, reprezentujúci pravdepodobnosť vzťahu. 
+    </para>
+  </section>
+  <section>
+    <title>Záverečné komplikácie</title>
+    <para>
+      Na začiatku sa vytvorili komplikácie pri pokuse o používanie jednotlivých balíkov knižnice batik. Po polhodinovom pokuse zkompilovať kód bez ClassNotFound chýb, sme sa rozhodli pre vyššie spomenuté riešenie celého balíku. 
+    </para>
+    <para>
+      Následne sa vyskytli komplikácie po vytvorení servletu, ktoré boli odstránené po niekoľkých hodinách zmenou v jednom riadku.
+    </para>
+    <para>
+      Vo finále však ostala jediná komplikácia prítomná, a to je natočenie pravdepodobnosti nad šípkou. V prípade že ide šípka smerom z prava do ľava, je text orientovaný o 180. Ani napriek niekoľkým pokusom o vyriešenie tohto "tŕňa v oku", cez použitie atribútu rotate v elemente tspan, transformácie pomocou matice, rotácie a CSS transformáciam, ostáva písmo otočené o 180 stupňov voči normálu.
+    </para>
+  </section>
+  <section>
+    <title>Zhodnotenie projektu</title>
+    <para>
+      Jedná sa o jeden z mojich najväčších projektov, na ktorom som spolupracoval. Za jednoznačné plus tohoto projektu je práca v kolektíve, a kolektívnu prácu cez nástroj Git. Odnášam si cenné skúsenosti, ktoré neskôr, dúfam, budem môcť využiť.
+    </para>
+  </section>
+</article>
+
+
