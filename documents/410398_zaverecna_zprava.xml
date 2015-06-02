@@ -1,14 +1,14 @@
- <?xml version="1.0" encoding="UTF-8"?>
+ï»¿ <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <article>
   <articleinfo>
-    <title>Závìreèná zpráva</title>
+    <title>ZÃ¡vÄ›reÄnÃ¡ zprÃ¡va</title>
 
     <author>
       <firstname>Petra</firstname>
 
-      <surname>Jouzová</surname>
+      <surname>JouzovÃ¡</surname>
 
       <affiliation>
         <orgname>Masarykova Univerzita, Fakulta informatiky</orgname>
@@ -19,57 +19,57 @@
   </articleinfo>
 
   <section>
-    <title>Rozparsování dat formátu xml</title>
+    <title>RozparsovÃ¡nÃ­ dat formÃ¡tu xml</title>
 
-    <para>Jako svùj hlavní úkol jsem si vybrala získání dat z dokumentù xml, 
-    která reprezentují vısledky analızy vìt uivatele. Data jsou uloena v šesti
-    rùznıch xml dokumentech. Pro tvorbu bylo potøeba rozparsovat tøi z nich, a
+    <para>Jako svÅ¯j hlavnÃ­ Ãºkol jsem si vybrala zÃ­skÃ¡nÃ­ dat z dokumentÅ¯ xml, 
+    kterÃ¡ reprezentujÃ­ vÃ½sledky analÃ½zy vÄ›t uÅ¾ivatele. Data jsou uloÅ¾ena v Å¡esti
+    rÅ¯znÃ½ch xml dokumentech. Pro tvorbu bylo potÅ™eba rozparsovat tÅ™i z nich, a
     to ff.text.xml, ff.syntax.xml a ff.syntax-relation.xml.
     </para>
-    <para>Pro rozparsování xml byla vytvoøena tøída Sentence. Svùj úkol jsem
-    rozdìlila do tøí funkcí, které se postupnì volají v konstruktoru tøídy:
+    <para>Pro rozparsovÃ¡nÃ­ xml byla vytvoÅ™ena tÅ™Ã­da Sentence. SvÅ¯j Ãºkol jsem
+    rozdÄ›lila do tÅ™Ã­ funkcÃ­, kterÃ© se postupnÄ› volajÃ­ v konstruktoru tÅ™Ã­dy:
     readText(), readSyntax(), readRelation().
-    Dùleité jsou pro další zpracování dat a vykreslení SVG atributy String[] 
+    DÅ¯leÅ¾itÃ© jsou pro dalÅ¡Ã­ zpracovÃ¡nÃ­ dat a vykreslenÃ­ SVG atributy String[] 
     sentence a Int[] idSentence.
-    Funkce readText() uloí vìtu, která se má právì vypsat do pole sentence
-    a jejich id do idSentence. Funkce readSyntax() upraví sentence, tak e
-    propojí ty slova, která patøí k sobì (na vıstupu reprezentováno jako slova 
-    v [], pø. [ve tøetí tøídì]). Volná místa v poli naplní hodnotou null.
-    Do idSentence nastaví id syntaxu. Funkce readRelation() po pøeètení 
-    ff.syntax-realtion.xml uloí do idSentence data pro následné vykreslení 
-    šipek mezi slovy (ve vıstupu SVG).</para>
-    <para> V tìchto tøech funkcích vyuívám pro parsování rozhraní DOM v 
-    kombinaci s programovacím jazykem Java.  </para>
-    <para> Tøída Sentence se vytváøí pro kadého ohodnocovatele nová a její
-    data jsou následnì zpracována ve tøídì Evaluation.</para>
+    Funkce readText() uloÅ¾Ã­ vÄ›tu, kterÃ¡ se mÃ¡ prÃ¡vÄ› vypsat do pole sentence
+    a jejich id do idSentence. Funkce readSyntax() upravÃ­ sentence, tak Å¾e
+    propojÃ­ ty slova, kterÃ¡ patÅ™Ã­ k sobÄ› (na vÃ½stupu reprezentovÃ¡no jako slova 
+    v [], pÅ™. [ve tÅ™etÃ­ tÅ™Ã­dÄ›]). VolnÃ¡ mÃ­sta v poli naplnÃ­ hodnotou null.
+    Do idSentence nastavÃ­ id syntaxu. Funkce readRelation() po pÅ™eÄtenÃ­ 
+    ff.syntax-realtion.xml uloÅ¾Ã­ do idSentence data pro nÃ¡slednÃ© vykreslenÃ­ 
+    Å¡ipek mezi slovy (ve vÃ½stupu SVG).</para>
+    <para> V tÄ›chto tÅ™ech funkcÃ­ch vyuÅ¾Ã­vÃ¡m pro parsovÃ¡nÃ­ rozhranÃ­ DOM v 
+    kombinaci s programovacÃ­m jazykem Java.  </para>
+    <para> TÅ™Ã­da Sentence se vytvÃ¡Å™Ã­ pro kaÅ¾dÃ©ho ohodnocovatele novÃ¡ a jejÃ­
+    data jsou nÃ¡slednÄ› zpracovÃ¡na ve tÅ™Ã­dÄ› Evaluation.</para>
   
   </section>
 
   <section>
     <title>Komplikace</title>
-    <para> V parsování dat nastaly tøi komplikace.</para>
-    <para> První komplikací byl pouze detail, kterı interpunkèní znaménka
-    vykresloval v samostatném poli. Øešením bylo pøidání znamének k poli
-    pøedcházejícímu.</para>
-    <para> Druhá komplikace nastala ve chvíli, kdy mìly bıt spojeny v poli
-    slova, která nestojí vedle sebe ve vìtì. Øešení této komplikace se 
-    vyøešilo pøidáním nového atributu notTogetherWord, které si tyto skupiny
-    pamatuje, následnì jsou tyto slova v SVG vykresleny èervenì.</para>
-    <para> Poslední komplikace se objevila pøi pøipojení hodnocení druhého
-    uivatele, kterı ohodnotil pravdivì dvì skupiny slov, které se pøekrıvaly.
-    Tento problém se vyøešil vynecháním všech syntax, které mají tag roven
-    "clause", a pøidáním podmínky pokud je v prvcích pole, které se mají
+    <para> V parsovÃ¡nÃ­ dat nastaly tÅ™i komplikace.</para>
+    <para> PrvnÃ­ komplikacÃ­ byl pouze detail, kterÃ½ interpunkÄnÃ­ znamÃ©nka
+    vykresloval v samostatnÃ©m poli. Å˜eÅ¡enÃ­m bylo pÅ™idÃ¡nÃ­ znamÃ©nek k poli
+    pÅ™edchÃ¡zejÃ­cÃ­mu.</para>
+    <para> DruhÃ¡ komplikace nastala ve chvÃ­li, kdy mÄ›ly bÃ½t spojeny v poli
+    slova, kterÃ¡ nestojÃ­ vedle sebe ve vÄ›tÄ›. Å˜eÅ¡enÃ­ tÃ©to komplikace se 
+    vyÅ™eÅ¡ilo pÅ™idÃ¡nÃ­m novÃ©ho atributu notTogetherWord, kterÃ© si tyto skupiny
+    pamatuje, nÃ¡slednÄ› jsou tyto slova v SVG vykresleny ÄervenÄ›.</para>
+    <para> PoslednÃ­ komplikace se objevila pÅ™i pÅ™ipojenÃ­ hodnocenÃ­ druhÃ©ho
+    uÅ¾ivatele, kterÃ½ ohodnotil pravdivÄ› dvÄ› skupiny slov, kterÃ© se pÅ™ekrÃ½valy.
+    Tento problÃ©m se vyÅ™eÅ¡il vynechÃ¡nÃ­m vÅ¡ech syntax, kterÃ© majÃ­ tag roven
+    "clause", a pÅ™idÃ¡nÃ­m podmÃ­nky pokud je v prvcÃ­ch pole, kterÃ© se majÃ­
     spojit hodnota null, tak tento element ignorovat.</para>
   </section>
 
   <section>
-    <title>Zhodnocení projektu</title>
+    <title>ZhodnocenÃ­ projektu</title>
 
-    <para>Jednalo se o nejvìtší tımovı projekt, na jakém jsem se zatím
-    podílela. Povedlo se nám vytvoøit funkèní webovou stránku, vyzkoušeli jsme 
-    si práci s nástroji pro zpracování XML, nauèili jsme se pouívat Git a 
-    vyzkoušeli jsme si, jak probíhá práce ve vìtším tımu. Tento projekt byl pro
-    mì velkım pøínosem a získané znalosti a zkušenosti jistì v budoucnu 
-    vyuiji.</para>
+    <para>Jednalo se o nejvÄ›tÅ¡Ã­ tÃ½movÃ½ projekt, na jakÃ©m jsem se zatÃ­m
+    podÃ­lela. Povedlo se nÃ¡m vytvoÅ™it funkÄnÃ­ webovou strÃ¡nku, vyzkouÅ¡eli jsme 
+    si prÃ¡ci s nÃ¡stroji pro zpracovÃ¡nÃ­ XML, nauÄili jsme se pouÅ¾Ã­vat Git a 
+    vyzkouÅ¡eli jsme si, jak probÃ­hÃ¡ prÃ¡ce ve vÄ›tÅ¡Ã­m tÃ½mu. Tento projekt byl pro
+    mÄ› velkÃ½m pÅ™Ã­nosem a zÃ­skanÃ© znalosti a zkuÅ¡enosti jistÄ› v budoucnu 
+    vyuÅ¾iji.</para>
   </section>
 </article>
